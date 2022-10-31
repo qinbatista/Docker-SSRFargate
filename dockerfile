@@ -7,7 +7,7 @@ RUN apt-get -y install make gcc python3 unzip python3-pip curl
 
 #install python3 packages
 RUN pip3 install --upgrade pip
-RUN pip3 install -r /requirements.txt
+RUN pip3 install -r /requirement
 
 #install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
