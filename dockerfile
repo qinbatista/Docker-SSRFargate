@@ -1,5 +1,5 @@
 FROM debian:10-slim
-ADD * /
+ADD * ./
 RUN apt-get clean
 RUN apt-get update
 RUN apt-get -y install make gcc python3 unzip python3-pip curl
