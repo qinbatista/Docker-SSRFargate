@@ -67,8 +67,9 @@ class ECSManager:
         self._stop_task(arn)
 
     def _create_ssr_task(self):
-        cli_command = f"aws ecs run-task\
+        cli_command = f"aws ecs create-task-set\
                         --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster\
+                        --service arn:aws:ecs:us-west-2:825807444916:service/QinCluster/SSR\
                         --network-configuration awsvpcConfiguration=\{{subnets=[subnet-59acc072,subnet-3691656b,subnet-da313691,subnet-669e841f],securityGroups=[sg-01c1819cdc065a550],assignPublicIp=ENABLED\}}\
                         --task-definition SSRFargate"
         result = self.__exec_aws_command(cli_command)
