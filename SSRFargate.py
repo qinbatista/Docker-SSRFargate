@@ -33,9 +33,9 @@ class SSRFargate:
         self.__inaccessible_count = 0
         self.__record_time = datetime.now(self.__CN_timezone)
         self.__ave_time = 0
-        with open("google_key.txt", "r") as f:
+        with open("/google_key.txt", "r") as f:
             self.__google_key = f.readline()
-        with open("google_secret.txt", "r") as f:
+        with open("/google_secret.txt", "r") as f:
             self.__google_secret = f.readline()
 
     def __log(self, result):
