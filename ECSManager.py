@@ -58,7 +58,6 @@ class ECSManager:
         self.__log(aws_result)
         return aws_result
 
-
     def _replace_fargate(self):
         self.__log("_list_task")
         arn = self._list_task()
