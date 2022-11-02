@@ -9,7 +9,6 @@ import platform
 
 class ECSManager:
     def __init__(self):
-
         if platform.system() == "Darwin":
             self.__file_path = "/Users/qin/Desktop/logs.txt"
             self.__fn_stdout = (
@@ -24,6 +23,8 @@ class ECSManager:
             self.__fn_tderr = f"/root/_get_static_ip_stderr{uuid.uuid4()}.json"
 
     def __log(self, result):
+        if os.path.isfile(self.__file_path) == False:
+            return
         with open(self.__file_path, "a+") as f:
             f.write(f"{str(result)}\n")
         if os.path.getsize(self.__file_path) > 1024 * 512:
@@ -94,7 +95,8 @@ class ECSManager:
             return ""
 
     def _stop_task(self, arn):
-        if arn=="": return
+        if arn == "":
+            return
         cli_command = f"aws ecs stop-task\
                         --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster\
                         --task {arn}"
@@ -105,6 +107,8 @@ class ECSManager:
                 return result["taskArns"][0]
         except Exception as e:
             self.__log(f"[_stop_task] failed:" + str(e))
+
+
 if __name__ == "__main__":
     ss = ECSManager()
     ss._replace_fargate()

@@ -1,4 +1,8 @@
 FROM debian:10-slim
+
+ARG aws_key
+ARG aws_secret
+
 ADD * /
 RUN ls
 RUN apt-get clean
@@ -13,8 +17,8 @@ RUN pip3 install -r /requirement
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
-RUN aws configure set aws_access_key_id AKIA4ARPVTO2IWF2IYPL
-RUN aws configure set aws_secret_access_key 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
+RUN aws configure set aws_access_key_id aws_key
+RUN aws configure set aws_secret_access_key aws_secret
 RUN aws configure set default.region us-west-2
 RUN aws configure set region us-west-2 --profile testing
 
