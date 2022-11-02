@@ -40,6 +40,5 @@ def run():
     app["MANAGER"] = HttpRequestManager()
     web.run_app(app, port="7031")
 
-
 if __name__ == "__main__":
     run()

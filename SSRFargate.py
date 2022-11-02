@@ -68,7 +68,7 @@ class SSRFargate:
                 return
             else:
                 result = requests.post(
-                    f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip={self.__the_ip}"
+                    f"https://0CZAMRlonw60PWyg:77JKaTvVEfjbqOjA@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip={self.__the_ip}"
                 )
                 self.__current_ip = self.__the_ip
         except Exception as e:
@@ -172,7 +172,6 @@ class SSRFargate:
             shell=True,
         )
         p.wait()
-
     def _replace_fargate_ip(self):
         em = ECSManager()
         em._replace_fargate()
