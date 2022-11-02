@@ -11,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: SSRFargateDockerLogin
     steps:
-      - name: install AWS
-        run: ./aws/install
-
       - name: set AWS key
         run: aws configure set aws_access_key_id AKIA4ARPVTO2IWF2IYPL
 
