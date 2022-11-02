@@ -13,6 +13,7 @@ import pytz
 import platform
 from ECSManager import ECSManager
 
+
 class SSRFargate:
     def __init__(self):
         # self.__region = _region
@@ -24,9 +25,7 @@ class SSRFargate:
         self.__udpServer = socket(AF_INET, SOCK_DGRAM)
         self.__current_ip = ""
         if platform.system() == "Darwin":
-            self.__file_path = (
-                "/Users/qin/qinProject/DockerProject/17_aws_ip_protecter/logs.txt"
-            )
+            self.__file_path = "/Users/qin/Desktop/logs.txt"
         else:
             self.__file_path = "/root/logs.txt"
         self.__is_connect = ""
@@ -75,9 +74,7 @@ class SSRFargate:
             )
 
     def _thread_IP_poster(self):
-        thread_refresh = threading.Thread(
-            target=self.__IP_poster, name="t1", args=()
-        )
+        thread_refresh = threading.Thread(target=self.__IP_poster, name="t1", args=())
         thread_refresh.start()
 
     def __IP_poster(self):
@@ -160,8 +157,18 @@ class SSRFargate:
             except Exception as e:
                 # pass
                 self.__log(f"{str(e)}")
+    def _thread_display_log(self):
+        thread_refresh = threading.Thread(target=self.__display_log, name="t1", args=())
+        thread_refresh.start()
 
-    def __replace_fargate_ip(self):
+    def __display_log(self):
+        p = subprocess.Popen(
+            "python3 /HttpRequest.py",
+            universal_newlines=True,
+            shell=True,
+        )
+        p.wait()
+    def _replace_fargate_ip(self):
         em = ECSManager()
         em._replace_fargate()
 
@@ -172,6 +179,7 @@ class SSRFargate:
 
 if __name__ == "__main__":
     sf = SSRFargate()
+    sf._thread_display_log()
     sf._thread_IP_poster()
     sf._thread_SSR()
     sf._thread_listening_CN()

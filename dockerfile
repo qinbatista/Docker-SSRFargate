@@ -24,6 +24,6 @@ RUN bash ssr-install.sh
 RUN cp ssr.json /etc/ssr.json
 
 #7000-7030 for SSR, 7171 for CN server listenning
-EXPOSE 7000-7030/tcp 7171/udp
+EXPOSE 7000-7031/tcp 7171/udp
 WORKDIR /root
 CMD  ["python3","/SSRFargate.py"]
