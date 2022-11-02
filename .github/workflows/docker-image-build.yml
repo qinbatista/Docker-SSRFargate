@@ -23,12 +23,14 @@ jobs:
       - name: set AWS test
         run: aws configure set region us-west-2 --profile testing
 
+      - name: Refresh Server
+        run: python3 ECSManager.py
+
       - uses: actions/checkout@v3
       - name: Build the Docker image
         run: docker build -t qinbatista/ssrfargate . --build-arg aws_key="${{ secrets.AWS_KEY }}" --build-arg aws_secret="${{ secrets.AWS_ACCESS }}"
 
-      - name: Refresh Server
-        run: python3 ECSManager.py
+
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
