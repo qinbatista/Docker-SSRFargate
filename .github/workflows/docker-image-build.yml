@@ -12,10 +12,10 @@ jobs:
     environment: SSRFargateDockerLogin
     steps:
       - name: set AWS key
-        run: aws configure set aws_access_key_id AKIA4ARPVTO2IWF2IYPL
+        run: aws configure set aws_access_key_id ${{ secrets.AWS_KEY }}
 
       - name: set AWS access
-        run: aws configure set aws_secret_access_key uqpv5GckzNgqogUw0lO7TXkPN5xObGw9ZGoZ7XDj
+        run: aws configure set aws_secret_access_key ${{ secrets.AWS_ACCESS }}
 
       - name: set AWS region
         run: aws configure set default.region us-west-2
