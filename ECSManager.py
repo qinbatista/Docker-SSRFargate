@@ -105,3 +105,6 @@ class ECSManager:
                 return result["taskArns"][0]
         except Exception as e:
             self.__log(f"[_stop_task] failed:" + str(e))
+if __name__ == "__main__":
+    ss = ECSManager()
+    ss._replace_fargate()
