@@ -174,7 +174,7 @@ class SSRFargate:
             shell=True,
         )
         p.wait()
-    def _replace_fargate_ip(self):
+    def __replace_fargate_ip(self):
         em = ECSManager()
         em._replace_fargate()
 
