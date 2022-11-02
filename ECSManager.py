@@ -156,5 +156,5 @@ class ECSManager:
 if __name__ == "__main__":
     em = ECSManager()
     print(em._create_ssr_task())
-    print(em.__list_task())
-    print(em.__stop_task("arn:aws:ecs:us-west-2:825807444916:task/QinCluster/7ef95139876a4c3c9a843518a4a118ef"))
+    print(em._list_task())
+    print(em._stop_task("arn:aws:ecs:us-west-2:825807444916:task/QinCluster/7ef95139876a4c3c9a843518a4a118ef"))

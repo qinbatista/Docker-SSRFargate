@@ -26,4 +26,4 @@ RUN cp ssr.json /etc/ssr.json
 #7000-7030 for SSR, 7171 for CN server listenning
 EXPOSE 7000-7030/tcp 7171/udp
 WORKDIR /root
-CMD  ["python","/SSRFargate.py"]
+CMD  ["python3","/SSRFargate.py"]
