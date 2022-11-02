@@ -37,7 +37,8 @@ class SSRFargate:
             self.__google_key = f.readline()
         with open("/google_secret.txt", "r") as f:
             self.__google_secret = f.readline()
-
+        self.__google_key = self.__google_key.strip()
+        self.__google_secret = self.__google_secret.strip()
     def __log(self, result):
         # if os.path.isfile(self.__file_path)==False:
         # with open(self.__file_path,"a+") as f:pass
