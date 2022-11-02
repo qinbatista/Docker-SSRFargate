@@ -78,7 +78,7 @@ class ECSManager:
                 self.__log(f"[_create_ssr_task] create task success")
                 return True
         except Exception as e:
-            self.__log(f"[_create_ssr_task] create task failed:" + str(e))
+            self.__log(f"[_create_ssr_task] failed:" + str(e))
             return False
 
     def _list_task(self):
@@ -90,7 +90,7 @@ class ECSManager:
                 self.__log(f"[_list_task] list task success")
                 return result["taskArns"][0]
         except Exception as e:
-            self.__log(f"[_list_task] create task failed:" + str(e))
+            self.__log(f"[_list_task] failed:" + str(e))
             return ""
 
     def _stop_task(self, arn):
@@ -104,4 +104,4 @@ class ECSManager:
                 self.__log(f"[_stop_task] list task success")
                 return result["taskArns"][0]
         except Exception as e:
-            self.__log(f"[_stop_task] create task failed:" + str(e))
+            self.__log(f"[_stop_task] failed:" + str(e))
