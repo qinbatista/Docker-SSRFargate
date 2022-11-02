@@ -9,8 +9,7 @@ class HttpRequestManager:
             self.__log_file_location = "/Users/qin/Desktop/logs.txt"
         else:
             self.__log_file_location = "/root/logs.txt"
-        self.__google_key = "/google_key.txt"
-        self.__google_secret = "/google_secret.txt"
+
 
     async def _get_log(self):
         if os.path.isfile(self.__log_file_location)==False: return "no file"
@@ -19,15 +18,7 @@ class HttpRequestManager:
             content = f.readlines()
         return content
 
-    async def _get_google(self):
-        if os.path.isfile(self.__log_file_location)==False: return "no file"
-        content = ""
-        with open(self.__google_key, "r") as f:
-            content = f.readlines()
 
-        with open(self.__google_secret, "r") as f:
-            content += " "+f.readlines()
-        return content
 ROUTES = web.RouteTableDef()
 
 
@@ -36,10 +27,6 @@ def _json_response(body: dict = "", **kwargs) -> web.Response:
     kwargs["content_type"] = "text/json"
     return web.Response(**kwargs)
 
-@ROUTES.get("/google")
-async def get_google_id(request: web.Request) -> web.Response:
-    result = await (request.app["MANAGER"])._get_google()
-    return _json_response({"status": 200, "message": "health", "data": result})
 
 @ROUTES.get("/")
 async def get_log(request: web.Request) -> web.Response:
