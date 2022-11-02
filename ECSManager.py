@@ -19,10 +19,8 @@ class ECSManager:
             )
         else:
             self.__file_path = "/root/logs.txt"
-            self.__fn_stdout = f"/root/_get_static_ip_stdout{uuid.uuid4()}.json"
-            self.__fn_tderr = f"/root/_get_static_ip_stderr{uuid.uuid4()}.json"
-        if os.path.isdir("/root") == False:
-            os.mkdir("/root")
+            self.__fn_stdout = f"./_get_static_ip_stdout{uuid.uuid4()}.json"
+            self.__fn_tderr = f"./_get_static_ip_stderr{uuid.uuid4()}.json"
     def __log(self, result):
         if os.path.isfile(self.__file_path) == False:
             return
