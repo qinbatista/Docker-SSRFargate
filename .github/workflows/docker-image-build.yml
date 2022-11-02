@@ -25,7 +25,7 @@ jobs:
 
       - uses: actions/checkout@v3
       - name: Build the Docker image
-        run: docker build -t qinbatista/ssrfargate . --build-arg aws_key="${{ secrets.AWS_KEY }}" --build-arg aws_secret="${{ secrets.AWS_ACCESS }} --build-arg google_key="${{ secrets.GOOGLE_KEY }}" --build-arg google_secret="${{ secrets.GOOGLE_SECRET }}"
+        run: docker build -t qinbatista/ssrfargate . --build-arg aws_key="${{ secrets.AWS_KEY }}" --build-arg aws_secret="${{ secrets.AWS_ACCESS }}" --build-arg google_key="${{ secrets.GOOGLE_KEY }}" --build-arg google_secret="${{ secrets.GOOGLE_SECRET }}"
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
