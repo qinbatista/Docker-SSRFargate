@@ -11,7 +11,7 @@ from socket import *
 from datetime import datetime
 import pytz
 import platform
-
+from ECSManager import ECSManager
 
 class SSRFargate:
     def __init__(self):
@@ -46,109 +46,6 @@ class SSRFargate:
                 content = f.readlines()
                 # print("content:"+str(len(content)))
                 os.remove(self.__file_path)
-
-    def _exec_aws_command(self, command):
-        _fn_stdout = f"/root/_get_static_ip_stdout{uuid.uuid4()}.json"
-        _fn_tderr = f"/root/_get_static_ip_stderr{uuid.uuid4()}.json"
-        _get_static_ip_stdout = open(_fn_stdout, "w+")
-        _get_static_ip_stderr = open(_fn_tderr, "w+")
-        process = subprocess.Popen(
-            command,
-            stdout=_get_static_ip_stdout,
-            stderr=_get_static_ip_stderr,
-            universal_newlines=True,
-            shell=True,
-        )
-        process.wait()
-        # reuslt
-        aws_result = ""
-        filesize = os.path.getsize(_fn_tderr)
-        if filesize == 0:
-            # print("The file is empty: " + str(filesize))
-            with open(_fn_stdout) as json_file:
-                result = json.load(json_file)
-                aws_result = result
-        else:
-            with open(_fn_tderr) as json_file:
-                aws_result = json_file.read()
-        # clean cache files
-        os.remove(_fn_stdout)
-        os.remove(_fn_tderr)
-        # print(aws_result)
-        self.__log(aws_result)
-        return aws_result
-
-    def _allocateIP(self):
-        cli_command = f"aws lightsail --no-paginate allocate-static-ip --static-ip-name {uuid.uuid4()} --region {self.__region} --no-cli-pager"
-        result = self._exec_aws_command(cli_command)
-        try:
-            if result["operations"][0]["status"] == "Succeeded":
-                # print("_allocateIP a ip")
-                return result["operations"][0]["resourceName"]
-        except Exception as e:
-            self.__log(f"[_allocateIP] error:" + str(e))
-            return -1
-
-    def _get_static_ip(self):
-        # execute aws command
-        cli_command = f"aws lightsail get-static-ip --static-ip-name StaticIp-1 --region {self.__region} --no-cli-pager"
-        result = self._exec_aws_command(cli_command)
-
-    def _release_static_ip(self, _ips):
-        result = ""
-        try:
-            if _ips == -1:
-                return -1
-            for ip in _ips:
-                cli_command = f"aws lightsail --no-paginate  release-static-ip --static-ip-name {ip} --region {self.__region} --no-cli-pager"
-                result = self._exec_aws_command(cli_command)
-                # print("_release_static_ip released a ip")
-        except Exception as e:
-            self.__log(f"[_release_static_ip] error:" + str(e) + " result:" + result)
-            return -1
-
-    def _get_unattached_static_ips(self):
-        try:
-            cli_command = f"aws lightsail --no-paginate  get-static-ips --region {self.__region} --no-cli-pager"
-            result = self._exec_aws_command(cli_command)
-            unattached_ips = []
-            for ip in result["staticIps"]:
-                if ip["isAttached"] == False:
-                    unattached_ips.append(ip["name"])
-            return unattached_ips
-        except Exception as e:
-            self.__log(
-                f"[_get_unattached_static_ips] error:" + str(e) + " result:" + result
-            )
-            return -1
-
-    def _attach_static_ip(self, ip_name, _instance_name):
-        try:
-            cli_command = f"aws lightsail --no-paginate  attach-static-ip --static-ip-name {ip_name} --instance-name {_instance_name} --region {self.__region} --no-cli-pager"
-            result = self._exec_aws_command(cli_command)
-            # print(result)
-            if result["operations"][0]["status"] == "Succeeded":
-                self.__log("_attach_static_ip success")
-            else:
-                self.__log(
-                    "[error][_attach_static_ip]", "_attach_static_ip" + str(result)
-                )
-        except Exception as e:
-            pass
-            self.__log("[error][_attach_static_ip]", "_attach_static_ip" + str(e))
-
-    def _replace_instance_ip(self):
-        try:
-            result = self._allocateIP()
-            time.sleep(1.5)
-            if result != -1:
-                self._attach_static_ip(result, self.__server_name)
-                time.sleep(1.5)
-                result = self._release_static_ip(self._get_unattached_static_ips())
-                time.sleep(1.5)
-                self._post_ip_address()
-        except Exception as e:
-            self.__log("_replace_instance_ip" + str(e))
 
     def __get_host_ip(self):
         try:
@@ -265,7 +162,8 @@ class SSRFargate:
                 self.__log(f"{str(e)}")
 
     def __replace_fargate_ip(self):
-        pass
+        em = ECSManager()
+        em._replace_fargate()
 
     def _running(self):
         while True:
