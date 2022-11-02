@@ -11,9 +11,17 @@ class ECSManager:
     def __init__(self):
 
         if platform.system() == "Darwin":
-            self.__file_path = "~/Desktop/logs.txt"
+            self.__file_path = "/Users/qin/Desktop/logs.txt"
+            self.__fn_stdout = (
+                f"/Users/qin/Desktop/_get_static_ip_stdout{uuid.uuid4()}.json"
+            )
+            self.__fn_tderr = (
+                f"/Users/qin/Desktop/_get_static_ip_stderr{uuid.uuid4()}.json"
+            )
         else:
             self.__file_path = "/root/logs.txt"
+            self.__fn_stdout = f"/root/_get_static_ip_stdout{uuid.uuid4()}.json"
+            self.__fn_tderr = f"/root/_get_static_ip_stderr{uuid.uuid4()}.json"
 
     def __log(self, result):
         with open(self.__file_path, "a+") as f:
@@ -24,45 +32,32 @@ class ECSManager:
                 os.remove(self.__file_path)
 
     def __exec_aws_command(self, command):
-        _fn_stdout = f"/root/_get_static_ip_stdout{uuid.uuid4()}.json"
-        _fn_tderr = f"/root/_get_static_ip_stderr{uuid.uuid4()}.json"
-        _get_static_ip_stdout = open(_fn_stdout, "w+")
-        _get_static_ip_stderr = open(_fn_tderr, "w+")
+        self.__get_static_ip_stdout = open(self.__fn_stdout, "w+")
+        self.__get_static_ip_stderr = open(self.__fn_tderr, "w+")
         process = subprocess.Popen(
             command,
-            stdout=_get_static_ip_stdout,
-            stderr=_get_static_ip_stderr,
+            stdout=self.__get_static_ip_stdout,
+            stderr=self.__get_static_ip_stderr,
             universal_newlines=True,
             shell=True,
         )
         process.wait()
         # reuslt
         aws_result = ""
-        filesize = os.path.getsize(_fn_tderr)
+        filesize = os.path.getsize(self.__fn_tderr)
         if filesize == 0:
-            with open(_fn_stdout) as json_file:
+            with open(self.__fn_stdout) as json_file:
                 result = json.load(json_file)
                 aws_result = result
         else:
-            with open(_fn_tderr) as json_file:
+            with open(self.__fn_tderr) as json_file:
                 aws_result = json_file.read()
         # clean cache files
-        os.remove(_fn_stdout)
-        os.remove(_fn_tderr)
+        os.remove(self.__fn_stdout)
+        os.remove(self.__fn_tderr)
         # print(aws_result)
         self.__log(aws_result)
         return aws_result
-
-    def _allocateIP(self):
-        cli_command = f"aws lightsail --no-paginate allocate-static-ip --static-ip-name {uuid.uuid4()} --region {self.__region} --no-cli-pager"
-        result = self.__exec_aws_command(cli_command)
-        try:
-            if result["operations"][0]["status"] == "Succeeded":
-                # print("_allocateIP a ip")
-                return result["operations"][0]["resourceName"]
-        except Exception as e:
-            self.__log(f"[_allocateIP] error:" + str(e))
-            return -1
 
     def _get_static_ip(self):
         # execute aws command
@@ -113,11 +108,53 @@ class ECSManager:
             self.__log("[error][_attach_static_ip]", "_attach_static_ip" + str(e))
 
     def _replace_fargate(self):
-        pass
-        # create a new fargate
-        # close this fargate
+        arn = self._list_task()
+        self._create_ssr_task()
+        self._stop_task(arn)
 
+    def _create_ssr_task(self):
+        cli_command = f"aws ecs run-task\
+                        --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster\
+                        --network-configuration awsvpcConfiguration=\{{subnets=[subnet-59acc072,subnet-3691656b,subnet-da313691,subnet-669e841f],securityGroups=[sg-01c1819cdc065a550],assignPublicIp=ENABLED\}}\
+                        --task-definition SSRFargate"
+        result = self.__exec_aws_command(cli_command)
+        print("result:" + str(result))
+        try:
+            if len(result["failures"]) == 0:
+                self.__log(f"[_create_ssr_task] create task success")
+                return True
+        except Exception as e:
+            self.__log(f"[_create_ssr_task] create task failed:" + str(e))
+            return False
 
+    def _list_task(self):
+        cli_command = f"aws ecs list-tasks\
+                        --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster"
+        result = self.__exec_aws_command(cli_command)
+        print("result:" + str(result))
+        try:
+            if result["taskArns"]!="":
+                self.__log(f"[_list_task] list task success")
+                return result["taskArns"][0]
+        except Exception as e:
+            self.__log(f"[_create_ssr_task] create task failed:" + str(e))
+            return ""
+
+    def _stop_task(self,arn):
+        cli_command = f"aws ecs stop-task\
+                        --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster\
+                        --task {arn}"
+        result = self.__exec_aws_command(cli_command)
+        print("result:" + str(result))
+        try:
+            if result["taskArns"]!="":
+                self.__log(f"[_list_task] list task success")
+                return result["taskArns"][0]
+        except Exception as e:
+            self.__log(f"[_create_ssr_task] create task failed:" + str(e))
+            return ""
 if __name__ == "__main__":
     em = ECSManager()
-    em._replace_fargate()
+    print(em._create_ssr_task())
+    print(em.__list_task())
+    print(em.__stop_task("arn:aws:ecs:us-west-2:825807444916:task/QinCluster/7ef95139876a4c3c9a843518a4a118ef"))
