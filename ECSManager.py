@@ -66,6 +66,7 @@ class ECSManager:
         self.__log("_stop_task")
         self._stop_task(arn)
 
+
     def _create_ssr_task(self):
         cli_command = f"aws ecs create-task-set\
                         --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster\
