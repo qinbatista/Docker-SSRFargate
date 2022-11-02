@@ -60,12 +60,12 @@ class ECSManager:
         return aws_result
 
     def _replace_fargate(self):
+        self.__log("_list_task")
         arn = self._list_task()
-        self.__log(arn)
-        self._create_ssr_task()
         self.__log("_create_ssr_task")
-        self._stop_task(arn)
+        self._create_ssr_task()
         self.__log("_stop_task")
+        self._stop_task(arn)
 
     def _create_ssr_task(self):
         cli_command = f"aws ecs run-task\
@@ -86,11 +86,11 @@ class ECSManager:
                         --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster"
         result = self.__exec_aws_command(cli_command)
         try:
-            if result["taskArns"] != "":
+            if result["taskArns"][0] != "":
                 self.__log(f"[_list_task] list task success")
                 return result["taskArns"][0]
         except Exception as e:
-            self.__log(f"[_create_ssr_task] create task failed:" + str(e))
+            self.__log(f"[_list_task] create task failed:" + str(e))
             return ""
 
     def _stop_task(self, arn):
@@ -101,7 +101,7 @@ class ECSManager:
         result = self.__exec_aws_command(cli_command)
         try:
             if result["taskArns"] != "":
-                self.__log(f"[_list_task] list task success")
+                self.__log(f"[_stop_task] list task success")
                 return result["taskArns"][0]
         except Exception as e:
-            self.__log(f"[_create_ssr_task] create task failed:" + str(e))
+            self.__log(f"[_stop_task] create task failed:" + str(e))
