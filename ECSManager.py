@@ -41,7 +41,7 @@ class ECSManager:
             shell=True,
         )
         process.wait()
-        # reuslt
+
         aws_result = ""
         filesize = os.path.getsize(self.__fn_tderr)
         if filesize == 0:
