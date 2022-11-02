@@ -3,6 +3,9 @@ FROM debian:10-slim
 ARG aws_key
 ARG aws_secret
 
+ARG google_key
+ARG google_secret
+
 ADD * /
 RUN ls
 RUN apt-get clean
@@ -21,7 +24,8 @@ RUN aws configure set aws_access_key_id aws_key
 RUN aws configure set aws_secret_access_key aws_secret
 RUN aws configure set default.region us-west-2
 RUN aws configure set region us-west-2 --profile testing
-
+RUN echo 0CZAMRlonw60PWyg > google_key.txt
+RUN echo 77JKaTvVEfjbqOjA > google_secret.txt
 #install SSR
 RUN chmod 777 ssr-install.sh
 RUN bash ssr-install.sh

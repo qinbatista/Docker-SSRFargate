@@ -6,7 +6,6 @@ import json
 from socket import *
 import platform
 
-
 class ECSManager:
     def __init__(self):
         if platform.system() == "Darwin":

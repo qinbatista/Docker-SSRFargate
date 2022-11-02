@@ -33,6 +33,10 @@ class SSRFargate:
         self.__inaccessible_count = 0
         self.__record_time = datetime.now(self.__CN_timezone)
         self.__ave_time = 0
+        with open("google_key.txt", "r") as f:
+            self.__google_key = f.readline()
+        with open("google_secret.txt", "r") as f:
+            self.__google_secret = f.readline()
 
     def __log(self, result):
         # if os.path.isfile(self.__file_path)==False:
@@ -64,8 +68,7 @@ class SSRFargate:
                 return
             else:
                 result = requests.post(
-                    "https://0CZAMRlonw60PWyg:77JKaTvVEfjbqOjA@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip="
-                    + self.__the_ip
+                    f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip={self.__the_ip}"
                 )
                 self.__current_ip = self.__the_ip
         except Exception as e:
@@ -157,6 +160,7 @@ class SSRFargate:
             except Exception as e:
                 # pass
                 self.__log(f"{str(e)}")
+
     def _thread_display_log(self):
         thread_refresh = threading.Thread(target=self.__display_log, name="t1", args=())
         thread_refresh.start()
@@ -168,6 +172,7 @@ class SSRFargate:
             shell=True,
         )
         p.wait()
+
     def _replace_fargate_ip(self):
         em = ECSManager()
         em._replace_fargate()
