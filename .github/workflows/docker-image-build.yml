@@ -24,10 +24,6 @@ jobs:
         run: aws configure set region us-west-2 --profile testing
 
       - uses: actions/checkout@v3
-      - name: Refresh Server
-        run: python3 ECSManager.py
-
-      - uses: actions/checkout@v3
       - name: Build the Docker image
         run: docker build -t qinbatista/ssrfargate . --build-arg aws_key="${{ secrets.AWS_KEY }}" --build-arg aws_secret="${{ secrets.AWS_ACCESS }}"
 
@@ -40,3 +36,6 @@ jobs:
       - name: Push docker
         run: docker push qinbatista/ssrfargate
 
+      - uses: actions/checkout@v3
+      - name: Refresh Server
+        run: python3 ECSManager.py
