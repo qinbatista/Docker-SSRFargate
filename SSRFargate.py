@@ -140,8 +140,8 @@ class SSRFargate:
         while True:
             try:
                 self.__received_count = self.__received_count - 10
-                # self.__log(f"self.__received_count={self.__received_count}")
-                if self.__received_count <= -300 or self.__inaccessible_count >= 3:
+                # if self.__received_count <= -300 or self.__inaccessible_count >= 3:
+                if self.__inaccessible_count >= 3:
                     first_time = datetime.now(self.__CN_timezone)
                     self.__replace_fargate_ip()
                     second_time = datetime.now(self.__CN_timezone)
