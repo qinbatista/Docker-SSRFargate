@@ -20,6 +20,9 @@ class ECSManager:
             self.__file_path = "/root/logs.txt"
             self.__fn_stdout = f"./_get_static_ip_stdout{uuid.uuid4()}.json"
             self.__fn_tderr = f"./_get_static_ip_stderr{uuid.uuid4()}.json"
+        self.__cluster = "arn:aws:ecs:us-west-2:825807444916:cluster/SSRCluster"
+        self.__service = "arn:aws:ecs:us-west-2:825807444916:service/SSRCluster/SSR-Services"
+        self.__task_definition = "SSRFargateTask"
     def __log(self, result):
         if os.path.isfile(self.__file_path) == False:
             return
@@ -68,10 +71,10 @@ class ECSManager:
 
     def _create_ssr_task(self):
         cli_command = f"aws ecs create-task-set\
-                        --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster\
-                        --service arn:aws:ecs:us-west-2:825807444916:service/QinCluster/SSR\
+                        {self.__cluster}\
+                        --service {self.__service}\
                         --network-configuration awsvpcConfiguration=\{{subnets=[subnet-59acc072,subnet-3691656b,subnet-da313691,subnet-669e841f],securityGroups=[sg-01c1819cdc065a550],assignPublicIp=ENABLED\}}\
-                        --task-definition SSRFargate"
+                        --task-definition {self.__task_definition}"
         result = self.__exec_aws_command(cli_command)
         try:
             if len(result["failures"]) == 0:
@@ -83,7 +86,7 @@ class ECSManager:
 
     def _list_task(self):
         cli_command = f"aws ecs list-tasks\
-                        --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster"
+                        --cluster {self.__cluster}"
         result = self.__exec_aws_command(cli_command)
         try:
             if result["taskArns"][0] != "":
@@ -97,7 +100,7 @@ class ECSManager:
         if arn == "":
             return
         cli_command = f"aws ecs stop-task\
-                        --cluster arn:aws:ecs:us-west-2:825807444916:cluster/QinCluster\
+                        {self.__cluster}\
                         --task {arn}"
         result = self.__exec_aws_command(cli_command)
         try:
