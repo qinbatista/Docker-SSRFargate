@@ -71,7 +71,7 @@ class ECSManager:
 
     def _create_ssr_task(self):
         cli_command = f"aws ecs create-task-set\
-                        {self.__cluster}\
+                        --cluster {self.__cluster}\
                         --service {self.__service}\
                         --network-configuration awsvpcConfiguration=\{{subnets=[subnet-59acc072,subnet-3691656b,subnet-da313691,subnet-669e841f],securityGroups=[sg-01c1819cdc065a550],assignPublicIp=ENABLED\}}\
                         --task-definition {self.__task_definition}"
@@ -100,7 +100,7 @@ class ECSManager:
         if arn == "":
             return
         cli_command = f"aws ecs stop-task\
-                        {self.__cluster}\
+                        --cluster {self.__cluster}\
                         --task {arn}"
         result = self.__exec_aws_command(cli_command)
         try:
