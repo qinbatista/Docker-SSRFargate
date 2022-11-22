@@ -8,8 +8,9 @@ import uuid
 import subprocess
 from socket import *
 from datetime import datetime
-
-class DDNSClient:
+import json
+from ping3 import ping
+class TestSSR:
     def __init__(self):
         self.__target_server = "us.qinyupeng.com"
         # https://domains.google.com/checkip banned by Chinese GFW
@@ -31,7 +32,14 @@ class DDNSClient:
             except Exception as e:
                 pass
 
+    def _lambda_handler(self):
+        result = ping('u11s.qinyupeng.com')
+        if result:
+            print("Success")
+        else:
+            print("Failed with {}".format(r.ret_code))
 
 if __name__ == '__main__':
-    ss = DDNSClient()
-    ss._declare_alive()
+    ss = TestSSR()
+    # ss._declare_alive()
+    ss._lambda_handler()
