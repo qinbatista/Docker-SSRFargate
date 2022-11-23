@@ -139,29 +139,13 @@ class SSRFargate:
     def __ip_holding(self):
         while True:
             try:
-                self.__received_count = self.__received_count - 10
-                # if self.__received_count <= -300 or self.__inaccessible_count >= 3:
                 if self.__inaccessible_count >= 3:
-                    first_time = datetime.now(self.__CN_timezone)
-                    self.__replace_fargate_ip()
-                    second_time = datetime.now(self.__CN_timezone)
-                    difference = second_time - first_time
-                    last_time = datetime.now(self.__CN_timezone) - self.__record_time
-                    if self.__ave_time == 0:
-                        self.__ave_time = last_time.seconds
-                    else:
-                        self.__ave_time = (self.__ave_time + last_time.seconds) / 2
-                    self.__log(
-                        f"| Used:{ difference.seconds:2.2f} seconds | Duration:{last_time.seconds/3600:2.2f} hours | Ave:{self.__ave_time/3600:2.2f} hours | Count:{self.__received_count}"
-                    )
-                    self.__log("")
-                    self.__record_time = datetime.now(self.__CN_timezone)
-                    self.__received_count = 0
-                    self.__inaccessible_count = 0
+                    self.__shutdown_current_ip()
                 time.sleep(60)
             except Exception as e:
                 # pass
                 self.__log(f"{str(e)}")
+
 
     def _thread_display_log(self):
         thread_refresh = threading.Thread(target=self.__display_log, name="t1", args=())
@@ -174,7 +158,7 @@ class SSRFargate:
             shell=True,
         )
         p.wait()
-    def __replace_fargate_ip(self):
+    def __shutdown_current_ip(self):
         em = ECSManager()
         em._replace_fargate()
 
