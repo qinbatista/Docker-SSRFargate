@@ -20,8 +20,8 @@ class ECSManager:
             self.__file_path = "/root/logs.txt"
             self.__fn_stdout = f"./_get_static_ip_stdout{uuid.uuid4()}.json"
             self.__fn_tderr = f"./_get_static_ip_stderr{uuid.uuid4()}.json"
-        self.__cluster = "arn:aws:ecs:us-west-2:825807444916:cluster/SSRCluster"
-        self.__service = "arn:aws:ecs:us-west-2:825807444916:service/SSRCluster/SSR-Service"
+        self.__cluster = "arn:aws:ecs:us-west-2:825807444916:cluster/SSR"
+        self.__service = "arn:aws:ecs:us-west-2:825807444916:service/SSR/SSR-Service"
         self.__task_definition = "SSRFargate"
     def __log(self, result):
         if os.path.isfile(self.__file_path) == False:
