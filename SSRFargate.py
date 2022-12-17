@@ -146,7 +146,6 @@ class SSRFargate:
                 # pass
                 self.__log(f"{str(e)}")
 
-
     def _thread_display_log(self):
         thread_refresh = threading.Thread(target=self.__display_log, name="t1", args=())
         thread_refresh.start()
@@ -158,6 +157,7 @@ class SSRFargate:
             shell=True,
         )
         p.wait()
+
     def __shutdown_current_ip(self):
         em = ECSManager()
         em._replace_fargate()
@@ -166,7 +166,17 @@ class SSRFargate:
         while True:
             time.sleep(10)
 
+    def _thread_youtubeSync(self):
+        thread_refresh = threading.Thread(target=self.__youtubeSync, name="t1", args=())
+        thread_refresh.start()
 
+    def __youtubeSync(self):
+        p = subprocess.Popen(
+            "python3 /YoutubeSync.py",
+            universal_newlines=True,
+            shell=True,
+        )
+        p.wait()
 if __name__ == "__main__":
     sf = SSRFargate()
     sf._thread_display_log()
@@ -174,4 +184,5 @@ if __name__ == "__main__":
     sf._thread_SSR()
     sf._thread_listening_CN()
     sf._thread_ip_holding()
+    sf._thread_youtubeSync()
     sf._running()
