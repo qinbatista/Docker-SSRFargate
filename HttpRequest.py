@@ -31,14 +31,16 @@ class HttpRequestManager:
                 files_dict[file] = file_path
         return files_dict
 
-    def _check_file_content(self):
-        pass
-
     async def _check_query(self, id):
         if id == "download":
             return self._get_files()
         else:
             return {"message": "no such id"}
+
+    async def _check_file_content(self, path):
+        with open(path, 'r') as f:
+            file_contents = f.read()
+        return {path: file_contents}
 
 
 ROUTES = web.RouteTableDef()
@@ -50,7 +52,12 @@ def _json_response(body: dict = "", **kwargs) -> web.Response:
     return web.Response(**kwargs)
 
 
-@ROUTES.get("/")
+@ROUTES.get("/lookup")
+async def query_message(request: web.Request) -> web.Response:
+    result = await (request.app["MANAGER"])._check_file_content(request.query["path"])
+    return _json_response(result)
+
+@ROUTES.get("/log")
 async def get_log(request: web.Request) -> web.Response:
     result = await (request.app["MANAGER"])._get_log()
     return _json_response({"status": 200, "message": "health", "data": result})
