@@ -2,6 +2,9 @@ import json
 from aiohttp import web
 import platform
 import os
+import socket
+import re
+import requests
 
 
 class HttpRequestManager:
@@ -44,6 +47,36 @@ class HttpRequestManager:
             file_contents = f.read()
         return {path: file_contents}
 
+    def check_ip_or_domain(self, string):
+        ip_pattern = r"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+        if re.match(ip_pattern, string):
+            return "ip"
+        else:
+            return "domain"
+
+    def _get_ip_from_domain(self, domain_name):
+        try:
+            return socket.gethostbyname(domain_name)
+        except:
+            return "Error: Unable to get IP for domain name"
+
+    def get_ip_info(self, ip):
+        try:
+            response = requests.get(f"http://api.ipapi.com/api/{ip}?access_key=762f03e6b5ba38cff2fb5d876eb7860f")
+            if response.status_code == 200:
+                return response.json()
+            else:
+                return response.json()
+        except:
+            return response.json()
+
+    async def _IP_function(self, value):
+        if self.check_ip_or_domain(value) == "ip":
+            return self.get_ip_info(value)
+        else:
+            ip = self._get_ip_from_domain(value)
+            return self.get_ip_info(ip)
+
 
 ROUTES = web.RouteTableDef()
 
@@ -59,16 +92,22 @@ async def query_message(request: web.Request) -> web.Response:
     result = await (request.app["MANAGER"])._check_file_content(request.query["path"])
     return _json_response(result)
 
+
 @ROUTES.get("/log")
 async def get_log(request: web.Request) -> web.Response:
     result = await (request.app["MANAGER"])._get_log()
     return _json_response({"status": 200, "message": "health", "data": result})
 
 
+@ROUTES.get("/ip/{value}")
+async def get_log(request: web.Request) -> web.Response:
+    result = await (request.app["MANAGER"])._IP_function(request.rel_url.name)
+    return _json_response({"status": 200, "message": "health", "data": result})
+
+
 @ROUTES.get("/{value}")
 async def query_message(request: web.Request) -> web.Response:
-    query_id = request.rel_url.name
-    result = await (request.app["MANAGER"])._check_query(query_id)
+    result = await (request.app["MANAGER"])._check_query(request.rel_url.name)
     return _json_response(result)
 
 

@@ -119,7 +119,7 @@ class QinServer:
                 if item.endswith(".mp4"):
                     if os.path.exists(f"{folder_path}/{item}"):
                         os.rename(f"{folder_path}/{item}", f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
-                        self.__s3_manager._sync_folder(folder_path, f"/Videos/{folder_name}")
+                        # self.__s3_manager._sync_folder(folder_path, f"/Videos/{folder_name}")
                         self.__NAS_sync(folder_path, folder_name)
 
                         self.__save_remove(f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
