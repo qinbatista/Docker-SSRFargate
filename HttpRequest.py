@@ -102,7 +102,10 @@ async def get_log(request: web.Request) -> web.Response:
 @ROUTES.get("/ip/{value}")
 async def get_log(request: web.Request) -> web.Response:
     result = await (request.app["MANAGER"])._IP_function(request.rel_url.name)
-    return _json_response({"status": 200, "message": "health", "data": result})
+    str_result = ""
+    for key, value in result.items():
+        str_result = str_result+ "|"+str(key) + ":" + str(value)+"| "
+    return _json_response(str_result)
 
 
 @ROUTES.get("/{value}")
