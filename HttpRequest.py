@@ -70,7 +70,9 @@ class HttpRequestManager:
         except:
             return response.json()
 
-    async def _IP_function(self, value):
+    async def _IP_function(self, value,remote_ip):
+        if value == "myself":
+            return self.get_ip_info(remote_ip)
         if self.check_ip_or_domain(value) == "ip":
             return self.get_ip_info(value)
         else:
@@ -101,10 +103,10 @@ async def get_log(request: web.Request) -> web.Response:
 
 @ROUTES.get("/ip/{value}")
 async def get_log(request: web.Request) -> web.Response:
-    result = await (request.app["MANAGER"])._IP_function(request.rel_url.name)
+    result = await (request.app["MANAGER"])._IP_function(request.rel_url.name,request.remote)
     str_result = ""
     for key, value in result.items():
-        str_result = str_result+ "|"+str(key) + ":" + str(value)+"| "
+        str_result = str_result + "|"+str(key) + ":" + str(value)+"| "
     return _json_response(str_result)
 
 
