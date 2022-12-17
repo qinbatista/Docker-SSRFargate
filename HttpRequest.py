@@ -27,7 +27,6 @@ def _json_response(body: dict = "", **kwargs) -> web.Response:
     kwargs["content_type"] = "text/json"
     return web.Response(**kwargs)
 
-
 @ROUTES.get("/")
 async def get_log(request: web.Request) -> web.Response:
     result = await (request.app["MANAGER"])._get_log()
