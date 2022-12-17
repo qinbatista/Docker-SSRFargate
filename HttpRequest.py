@@ -3,20 +3,42 @@ from aiohttp import web
 import platform
 import os
 
+
 class HttpRequestManager:
     def __init__(self, worlds=[]):
         if platform.system() == "Darwin":
             self.__log_file_location = "/Users/qin/Desktop/logs.txt"
+            self.__download = "/Users/qin/Downloads"
         else:
             self.__log_file_location = "/root/logs.txt"
-
+            self.__download = "/download"
 
     async def _get_log(self):
-        if os.path.isfile(self.__log_file_location)==False: return "no file"
+        if os.path.isfile(self.__log_file_location) == False:
+            return "no file"
         content = ""
         with open(self.__log_file_location, "r") as f:
             content = f.readlines()
         return content
+
+    def _get_files(self):
+        files_dict = {}
+        # Walk through all the files and subdirectories in the directory
+        for root, dirs, files in os.walk(self.__download):
+            # For each file, add its name and path to the dictionary
+            for file in files:
+                file_path = os.path.join(root, file)
+                files_dict[file] = file_path
+        return files_dict
+
+    def _check_file_content(self):
+        pass
+
+    async def _check_query(self, id):
+        if id == "download":
+            return self._get_files()
+        else:
+            return {"message": "no such id"}
 
 
 ROUTES = web.RouteTableDef()
@@ -27,10 +49,18 @@ def _json_response(body: dict = "", **kwargs) -> web.Response:
     kwargs["content_type"] = "text/json"
     return web.Response(**kwargs)
 
+
 @ROUTES.get("/")
 async def get_log(request: web.Request) -> web.Response:
     result = await (request.app["MANAGER"])._get_log()
     return _json_response({"status": 200, "message": "health", "data": result})
+
+
+@ROUTES.get("/{value}")
+async def query_message(request: web.Request) -> web.Response:
+    query_id = request.rel_url.name
+    result = await (request.app["MANAGER"])._check_query(query_id)
+    return _json_response(result)
 
 
 def run():
@@ -39,6 +69,7 @@ def run():
     app.add_routes(ROUTES)
     app["MANAGER"] = HttpRequestManager()
     web.run_app(app, port="7031")
+
 
 if __name__ == "__main__":
     run()
