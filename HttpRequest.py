@@ -38,6 +38,8 @@ class HttpRequestManager:
             return {"message": "no such id"}
 
     async def _check_file_content(self, path):
+        if os.path.isfile(path) == False:
+            return {path: "no such file"}
         with open(path, 'r') as f:
             file_contents = f.read()
         return {path: file_contents}
