@@ -11,7 +11,7 @@ from socket import *
 from datetime import datetime
 import pytz
 import platform
-
+from ECSManager import ECSManager
 class SSRFargate:
     def __init__(self):
         # self.__region = _region
@@ -110,10 +110,9 @@ class SSRFargate:
             while True:
                 data, addr = self.__udpServer.recvfrom(1024)
                 ip, port = addr
-                print(f"{data.decode(encoding='utf-8')} {ip} {port}")
+                # print(f"{data.decode(encoding='utf-8')} {ip} {port}")
                 # self.__udpServer.sendto(f"{ip}".encode('utf-8'), addr)
                 # if int(datetime.now(self.__CN_timezone).strftime('%H'))>1 and int(datetime.now(self.__CN_timezone).strftime('%H'))<14:
-                self.__received_count = 0
                 message = data.decode(encoding="utf-8").split(",")
                 if len(message) == 2:
                     self.__current_ip_from_udp = message[0]
@@ -137,12 +136,19 @@ class SSRFargate:
     def __ip_holding(self):
         while True:
             try:
-                if self.__inaccessible_count >= 3:
+                self.__received_count = self.__received_count - 1
+                if self.__inaccessible_count >= 3 or self.__received_count <= -60*24:
                     self.__shutdown_current_ip()
+                    self.__received_count = 0
+                    self.__inaccessible_count = 0
                 time.sleep(60)
             except Exception as e:
                 # pass
-                self.__log(f"{str(e)}")
+                self.__log(f"{str(e)}")\
+
+    def __shutdown_current_ip(self):
+        em = ECSManager()
+        em._replace_fargate()
 
     def _thread_display_log(self):
         thread_refresh = threading.Thread(target=self.__display_log, name="t1", args=())
