@@ -11,8 +11,6 @@ from socket import *
 from datetime import datetime
 import pytz
 import platform
-from ECSManager import ECSManager
-
 
 class SSRFargate:
     def __init__(self):
@@ -157,10 +155,6 @@ class SSRFargate:
             shell=True,
         )
         p.wait()
-
-    def __shutdown_current_ip(self):
-        em = ECSManager()
-        em._replace_fargate()
 
     def _running(self):
         while True:
