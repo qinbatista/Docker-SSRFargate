@@ -5,7 +5,7 @@ import os
 import socket
 import re
 import requests
-
+import subprocess
 
 class HttpRequestManager:
     def __init__(self, worlds=[]):
@@ -62,15 +62,19 @@ class HttpRequestManager:
 
     def get_ip_info(self, ip):
         try:
-            response = requests.get(f"http://api.ipapi.com/api/{ip}?access_key=762f03e6b5ba38cff2fb5d876eb7860f")
+            output = subprocess.check_output(["whois", ip])
+            output_str = output.decode("utf-8")
+            response = requests.get(f"http://api.ipapi.com/api/{ip}?access_key=762f03e6b5ba38cff2fb5d876eb7860f&hostname=1").json()
+            del response["location"]
+            response["whois"] = output_str
             if response.status_code == 200:
-                return response.json()
+                return response
             else:
-                return response.json()
+                return response
         except:
-            return response.json()
+            return response
 
-    async def _IP_function(self, value,remote_ip):
+    async def _IP_function(self, value, remote_ip):
         if value == "myself":
             return self.get_ip_info(remote_ip)
         if self.check_ip_or_domain(value) == "ip":
@@ -103,11 +107,8 @@ async def get_log(request: web.Request) -> web.Response:
 
 @ROUTES.get("/ip/{value}")
 async def get_log(request: web.Request) -> web.Response:
-    result = await (request.app["MANAGER"])._IP_function(request.rel_url.name,request.remote)
-    str_result = ""
-    for key, value in result.items():
-        str_result = str_result + "|"+str(key) + ":" + str(value)+"| "
-    return _json_response(str_result)
+    result = await (request.app["MANAGER"])._IP_function(request.rel_url.name, request.remote)
+    return _json_response(result)
 
 
 @ROUTES.get("/{value}")
