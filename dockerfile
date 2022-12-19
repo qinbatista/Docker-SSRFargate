@@ -15,7 +15,7 @@ RUN apt-get clean
 RUN apt-get update
 
 ##
-RUN apt-get -y tar
+RUN apt-get -y install tar unzip
 RUN chmod 777 ssr-install.sh
 RUN bash ssr-install.sh
 RUN cp ssr.json /etc/ssr.json
