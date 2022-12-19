@@ -324,12 +324,12 @@ download_files(){
     fi
     # Download ShadowsocksR init script
     if check_sys packageManager yum; then
-        if ! wget --no-check-certificate https://raw.githubusercontent.com/ShadowsocksR-Live/shadowsocksr/manyuser/ssr-svc-yum -O /etc/init.d/ssr; then
+        if ! wget --no-check-certificate https://qincdn.s3.us-west-2.amazonaws.com/Download/ssr-svc-yum -O /etc/init.d/ssr; then
             echo -e "[${red}Error${plain}] Failed to download ShadowsocksR chkconfig file!"
             exit 1
         fi
     elif check_sys packageManager apt; then
-        if ! wget --no-check-certificate https://raw.githubusercontent.com/ShadowsocksR-Live/shadowsocksr/manyuser/ssr-svc-apt -O /etc/init.d/ssr; then
+        if ! wget --no-check-certificate https://qincdn.s3.us-west-2.amazonaws.com/Download/ssr-svc-apt -O /etc/init.d/ssr; then
             echo -e "[${red}Error${plain}] Failed to download ShadowsocksR chkconfig file!"
             exit 1
         fi
