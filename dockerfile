@@ -15,6 +15,12 @@ RUN apt-get clean
 RUN apt-get update
 RUN apt-get -y install make gcc python3 unzip python3-pip curl whois ffmpeg rsync python3-distutils sudo git tar build-essential ssh aria2 screen vim wget curl proxychains locales
 
+
+#install SSR
+RUN chmod 777 ssr-install.sh
+RUN bash ssr-install.sh
+RUN cp ssr.json /etc/ssr.json
+
 #install python3 packages
 RUN pip3 install --upgrade pip
 RUN pip3 install -r /requirement
@@ -49,10 +55,7 @@ RUN echo ${google_secret} > google_secret.txt
 RUN echo ${aws_key} > aws_key.txt
 RUN echo ${aws_secret} > aws_secret.txt
 
-#install SSR
-RUN chmod 777 ssr-install.sh
-RUN bash ssr-install.sh
-RUN cp ssr.json /etc/ssr.json
+
 
 #7000-7030 for SSR, 7171 for CN server listenning
 EXPOSE 7000-7031/tcp 7171/udp
