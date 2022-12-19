@@ -17,7 +17,7 @@ echo
 libsodium_file="libsodium-1.0.17"
 libsodium_url="https://github.com/jedisct1/libsodium/releases/download/1.0.17/libsodium-1.0.17.tar.gz"
 shadowsocks_r_file="shadowsocks"
-shadowsocks_r_url="https://qincdn.s3.us-west-2.amazonaws.com/Download/shadowsocks3.2.0-linux-server.zip"
+shadowsocks_r_url="https://qincdn.s3.us-west-2.amazonaws.com/Download/shadowsocks3.2.0-linux-server.tar.gz"
 
 #Current folder
 cur_dir=`pwd`
@@ -318,7 +318,7 @@ download_files(){
         exit 1
     fi
     # Download ShadowsocksR file
-    if ! wget --no-check-certificate -O ${shadowsocks_r_file}.zip ${shadowsocks_r_url}; then
+    if ! wget --no-check-certificate -O ${shadowsocks_r_file}.tar.gz ${shadowsocks_r_url}; then
         echo -e "[${red}Error${plain}] Failed to download ShadowsocksR file!"
         exit 1
     fi
@@ -410,7 +410,7 @@ install(){
     ldconfig
     # Install ShadowsocksR
     cd ${cur_dir}
-    tar zxf ${shadowsocks_r_file}.zip
+    tar zxf ${shadowsocks_r_file}.tar.gz
     ls
     mkdir /usr/local/ssr
     mv ${shadowsocks_r_file} /usr/local/ssr/
@@ -446,7 +446,7 @@ install(){
 # Install cleanup
 install_cleanup(){
     cd ${cur_dir}
-    rm -rf ${shadowsocks_r_file}.zip ${shadowsocks_r_file} ${libsodium_file}.tar.gz ${libsodium_file}
+    rm -rf ${shadowsocks_r_file}.tar.gz ${shadowsocks_r_file} ${libsodium_file}.tar.gz ${libsodium_file}
 }
 
 
