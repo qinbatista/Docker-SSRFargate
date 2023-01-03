@@ -65,7 +65,7 @@ class QinServer:
                 for key in self.mapping_table.keys():
                     self._youtube_sync_command(f"https://www.youtube.com/playlist?list={key}")
                 self.__log("Wait 1 hour ")
-                time.sleep(3600)
+                time.sleep(36000)
             except Exception as error:
                 self.__log("error: " + str(error))
 
