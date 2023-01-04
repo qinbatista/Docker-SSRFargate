@@ -16,6 +16,7 @@ import S3Manager
 import re
 import getpass
 
+
 class QinServer:
     def __init__(self):
         self.__downloader = "yt-dlp"  # "youtube-dl"
@@ -29,6 +30,8 @@ class QinServer:
             os.system(f"rm -rf /download/*")
             self._root_folder = "/download"
             self.__file_path = "/download/youtubesynclogs.txt"
+        if not os.path.exists(self._root_folder):
+            os.makedirs(self._root_folder)
         os.chdir(self._root_folder)
         os.system("git clone git@github.com:qinbatista/Config_YoutubeList.git")
         with open(f"{self._root_folder}/Config_YoutubeList/config.json") as f:
@@ -36,8 +39,6 @@ class QinServer:
         self.__cookie_file = f"{self._root_folder}/Config_YoutubeList/youtube_cookies.txt"
         self._storage_server_ip = "cq.qinyupeng.com"
         self._storage_server_port = 10022
-        if not os.path.exists(self._root_folder):
-            os.makedirs(self._root_folder)
 
         p = subprocess.Popen(
             "python3 -m pip install --upgrade pip", universal_newlines=True, shell=True
@@ -59,7 +60,7 @@ class QinServer:
         while True:
             try:
                 for folder in self.__folder_name_list:
-                    if os.path.exists(f"{self._root_folder}/{folder}") and folder!="":
+                    if os.path.exists(f"{self._root_folder}/{folder}") and folder != "":
                         os.system(f"rm -rf {self._root_folder}/{folder}/*")
                 time.sleep(1)
                 for key in self.mapping_table.keys():
@@ -143,7 +144,6 @@ class QinServer:
         except Exception as error:
             self.__log(f"[__isServerOpening]"+str(error))
             return False
-
 
     def __log(self, result):
         if not os.path.exists(self.__file_path):
