@@ -102,14 +102,37 @@ class QinServer:
 
         youtube_download_list = self.__get_video_list_from_youtube(folder_path, url)
 
-        downloaded_video_list_1 = set(youtube_download_list.keys()) - set(downloaded_video_list_local)  # type: ignore
-        downloaded_video_list_2 = set(youtube_download_list.keys()) - set(downloaded_video_list_s3)  # type: ignore
-        if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
-            downloaded_video_list = downloaded_video_list_1 | downloaded_video_list_2
+        if len(downloaded_video_list_local) == 0:
+            downloaded_video_list_1 = []
         else:
-            downloaded_video_list = downloaded_video_list_2
+            downloaded_video_list_1 = set(youtube_download_list.keys()) - set(downloaded_video_list_local)  # type: ignore
 
-        for video_id in downloaded_video_list:
+        if len(downloaded_video_list_s3) == 0:
+            downloaded_video_list_2 = []
+        else:
+            downloaded_video_list_2 = set(youtube_download_list.keys()) - set(downloaded_video_list_s3)  # type: ignore
+
+        # if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
+        #     downloaded_video_list = downloaded_video_list_1 | downloaded_video_list_2
+        # else:
+        #     downloaded_video_list = downloaded_video_list_2
+
+        for video_id in downloaded_video_list_1:
+            file_download_log = open(f"{folder_path}/downloading.txt", "w+")
+            download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
+            p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
+            p.wait()
+
+            cache_video = os.listdir(folder_path)
+            for item in cache_video:
+                if item.endswith(".mp4"):
+                    if os.path.exists(f"{folder_path}/{item}"):
+                        os.rename(f"{folder_path}/{item}", f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
+                        self.__NAS_sync(folder_path, folder_name)
+                        self.__save_remove(f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
+                        self.__log(f"[Sent]{folder_path}/[{youtube_download_list[video_id]}]{item}")
+
+        for video_id in downloaded_video_list_2:
             file_download_log = open(f"{folder_path}/downloading.txt", "w+")
             download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
             p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
@@ -121,8 +144,6 @@ class QinServer:
                     if os.path.exists(f"{folder_path}/{item}"):
                         os.rename(f"{folder_path}/{item}", f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
                         self.__s3_manager._sync_folder(folder_path, f"/Videos/{folder_name}")
-                        self.__NAS_sync(folder_path, folder_name)
-
                         self.__save_remove(f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
                         self.__log(f"[Sent]{folder_path}/[{youtube_download_list[video_id]}]{item}")
 
@@ -195,9 +216,7 @@ class QinServer:
                     line_to_json = json.loads(line)
                     youtube_index.update(
                         {
-                            line_to_json["id"]: line_to_json["playlist_count"]
-                            - line_to_json["playlist_index"]
-                            + 1
+                            line_to_json["id"]: line_to_json["playlist_index"]
                         }
                     )
         return youtube_index
