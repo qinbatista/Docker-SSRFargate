@@ -1,7 +1,16 @@
 
 # SSRFargate
 ## What it is?
-This is a docker source code of SSR based on open encryption connection. More info about [SSR](https://github.com/shadowsocksrr/shadowsocksr). The docker can be deployed on AWS->ECS->Fargata container which is the cheapest docker container right now, around $2/month.
+This is a docker source code of SSR based on open encryption connection. More info about [SSR](https://github.com/shadowsocksrr/shadowsocksr). The docker can be deployed on AWS->ECS->Fargata container which is the cheapest docker container right now, around $2/month.\
+
+```
+docker run -itdv /home/admin/download:/download qinbatista/ssrfargate
+```
+
+```
+docker run -itdv /home/admin/download:/download -p 7000-7030:7000-7030 qinbatista/ssrfargate
+```
+
 ## How to use it?
 
 1: Build this docker and push this docker into your docker repository (*qinbatista* is my docker repository)
@@ -82,3 +91,4 @@ More encryptions from [here](https://github.com/shadowsocksrr/shadowsocks-rss/bl
 
 ## Check Docker health
 - the port 7031 is opened for HTTP accessing 
+
