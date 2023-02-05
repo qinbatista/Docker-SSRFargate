@@ -112,10 +112,11 @@ class QinServer:
         else:
             downloaded_video_list_2 = set(youtube_download_list.keys()) - set(downloaded_video_list_s3)  # type: ignore
 
-        # if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
-        #     downloaded_video_list = downloaded_video_list_1 | downloaded_video_list_2
-        # else:
-        #     downloaded_video_list = downloaded_video_list_2
+        if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
+            downloaded_video_list = downloaded_video_list_1 | downloaded_video_list_2
+        else:
+            downloaded_video_list = downloaded_video_list_2
+
         if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
             for video_id in downloaded_video_list_1:
                 file_download_log = open(f"{folder_path}/downloading.txt", "w+")
