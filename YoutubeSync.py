@@ -104,7 +104,7 @@ class QinServer:
 
         if len(downloaded_video_list_local) == 0:
             downloaded_video_list_1 = []
-        else:
+        else:#8cylpXp_AQE
             downloaded_video_list_1 = set(youtube_download_list.keys()) - set(downloaded_video_list_local)  # type: ignore
 
         if len(downloaded_video_list_s3) == 0:
@@ -116,21 +116,21 @@ class QinServer:
         #     downloaded_video_list = downloaded_video_list_1 | downloaded_video_list_2
         # else:
         #     downloaded_video_list = downloaded_video_list_2
+        if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
+            for video_id in downloaded_video_list_1:
+                file_download_log = open(f"{folder_path}/downloading.txt", "w+")
+                download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
+                p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
+                p.wait()
 
-        for video_id in downloaded_video_list_1:
-            file_download_log = open(f"{folder_path}/downloading.txt", "w+")
-            download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
-            p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
-            p.wait()
-
-            cache_video = os.listdir(folder_path)
-            for item in cache_video:
-                if item.endswith(".mp4"):
-                    if os.path.exists(f"{folder_path}/{item}"):
-                        os.rename(f"{folder_path}/{item}", f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
-                        self.__NAS_sync(folder_path, folder_name)
-                        self.__save_remove(f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
-                        self.__log(f"[Sent]{folder_path}/[{youtube_download_list[video_id]}]{item}")
+                cache_video = os.listdir(folder_path)
+                for item in cache_video:
+                    if item.endswith(".mp4"):
+                        if os.path.exists(f"{folder_path}/{item}"):
+                            os.rename(f"{folder_path}/{item}", f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
+                            self.__NAS_sync(folder_path, folder_name)
+                            self.__save_remove(f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
+                            self.__log(f"[Sent]{folder_path}/[{youtube_download_list[video_id]}]{item}")
 
         for video_id in downloaded_video_list_2:
             file_download_log = open(f"{folder_path}/downloading.txt", "w+")
@@ -216,7 +216,7 @@ class QinServer:
                     line_to_json = json.loads(line)
                     youtube_index.update(
                         {
-                            line_to_json["id"]: line_to_json["playlist_index"]
+                            line_to_json["id"]: line_to_json["n_entries"]-line_to_json["playlist_index"]-1
                         }
                     )
         return youtube_index
@@ -240,7 +240,7 @@ class QinServer:
         video_id = video_url[start:end]
         if video_id == video_url:
             return ""
-        result = re.search(r'[a-zA-Z0-9-]{11}$', video_id)
+        result = re.search(r'[a-zA-Z0-9-_]{11}$', video_id)
         if result != None:
             if result.span().index(11) == 1:
                 return video_url[start:end]
