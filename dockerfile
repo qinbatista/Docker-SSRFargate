@@ -15,6 +15,11 @@ RUN apt-get clean
 RUN apt-get update
 RUN apt-get -y install make gcc python3 unzip python3-pip curl whois ffmpeg rsync python3-distutils sudo git tar build-essential ssh aria2 screen vim wget curl proxychains locales
 
+#check chatGPT
+RUN ls
+WORKDIR /DiscordChatGPT
+RUN ls
+
 #install SSR
 RUN chmod 777 ssr-install.sh
 RUN bash ssr-install.sh
