@@ -1,4 +1,4 @@
-FROM debian:10-slim
+FROM debian:11-slim
 
 ARG aws_key
 ARG aws_secret
