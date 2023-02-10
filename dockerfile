@@ -11,7 +11,8 @@ ARG rsa_public
 
 #check chatGPT
 RUN ls
-COPY /DiscordChatGPT /
+COPY . /
+RUN ls
 WORKDIR /DiscordChatGPT
 RUN ls
 
