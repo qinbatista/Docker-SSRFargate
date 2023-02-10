@@ -10,11 +10,9 @@ ARG rsa
 ARG rsa_public
 
 #install python3 packages
-RUN apt-get update -y && apt-get install -y software-properties-common build-essential wget zlib1g-dev
-RUN wget https://www.python.org/ftp/python/3.9.16/Python-3.9.16.tgz
-RUN tar xzf Python-3.9.16.tgz && cd Python-3.9.16 && ./configure --enable-optimizations && make -j 8 && make install
-RUN python3.9 -m pip install --upgrade pip && python3.9 -m pip install wheel
-RUN python3.9 --version && pip3.9 --version
+RUN apt-get update -y && apt-get install -y python3 python3-pip
+RUN python3 -m pip install --upgrade pip && python3 -m pip install wheel
+RUN python3 --version && pip3 --version
 
 #install python3 packages
 RUN pip3 install --upgrade pip
