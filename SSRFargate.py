@@ -177,6 +177,20 @@ class SSRFargate:
             shell=True,
         )
         p.wait()
+
+
+    def _thread_Discord(self):
+        thread_refresh = threading.Thread(target=self.__Discord, name="t1", args=())
+        thread_refresh.start()
+
+    def __Discord(self):
+        p = subprocess.Popen(
+            "python3 /DiscordChatGPT/run.py",
+            universal_newlines=True,
+            shell=True,
+        )
+        p.wait()
+
 if __name__ == "__main__":
     sf = SSRFargate()
     sf._thread_display_log()
@@ -185,4 +199,5 @@ if __name__ == "__main__":
     sf._thread_listening_CN()
     sf._thread_ip_holding()
     sf._thread_youtubeSync()
+    sf._thread_Discord()
     sf._running()
