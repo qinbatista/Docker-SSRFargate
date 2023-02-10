@@ -193,11 +193,11 @@ class SSRFargate:
 
 if __name__ == "__main__":
     sf = SSRFargate()
-    sf._thread_display_log()
     sf._thread_IP_poster()
+    sf._thread_Discord()
+    sf._thread_display_log()
     sf._thread_SSR()
     sf._thread_listening_CN()
     sf._thread_ip_holding()
     sf._thread_youtubeSync()
-    sf._thread_Discord()
     sf._running()
