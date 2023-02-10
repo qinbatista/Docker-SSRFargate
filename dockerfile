@@ -9,15 +9,23 @@ ARG google_secret
 ARG rsa
 ARG rsa_public
 
+#install python3 packages
+RUN apt-get update -y && apt-get install -y software-properties-common build-essential wget
+RUN wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
+RUN tar xzf Python-3.9.0.tgz && cd Python-3.9.0 && ./configure --enable-optimizations && make -j 8 && make install
+RUN python3.9 --version
+
+#install python3 packages
+RUN pip3 install --upgrade pip
+RUN pip3 install -r /requirement
+
+
 #install packages
 COPY . /
 RUN apt-get clean
 RUN apt-get update
 RUN apt-get -y install make gcc python3.9 unzip python3-pip curl whois ffmpeg rsync python3-distutils sudo git tar build-essential ssh aria2 screen vim wget curl proxychains locales
 
-#install python3 packages
-RUN pip3 install --upgrade pip
-RUN pip3 install -r /requirement
 
 #install SSR
 RUN chmod 777 ssr-install.sh
