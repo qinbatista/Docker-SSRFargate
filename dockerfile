@@ -9,15 +9,12 @@ ARG google_secret
 ARG rsa
 ARG rsa_public
 
-#check chatGPT
+#install packages
 RUN ls
 COPY . /
-RUN ls
 WORKDIR /DiscordChatGPT
 RUN ls
 
-#install packages
-ADD * /
 RUN apt-get clean
 RUN apt-get update
 RUN apt-get -y install make gcc python3 unzip python3-pip curl whois ffmpeg rsync python3-distutils sudo git tar build-essential ssh aria2 screen vim wget curl proxychains locales
