@@ -15,15 +15,15 @@ RUN apt-get clean
 RUN apt-get update
 RUN apt-get -y install make gcc python3 unzip python3-pip curl whois ffmpeg rsync python3-distutils sudo git tar build-essential ssh aria2 screen vim wget curl proxychains locales
 
+#install python3 packages
+RUN pip3 install --upgrade pip
+RUN pip3 install -r /requirement
 
 #install SSR
 RUN chmod 777 ssr-install.sh
 RUN bash ssr-install.sh
 RUN cp ssr.json /etc/ssr.json
 
-#install python3 packages
-RUN pip3 install --upgrade pip
-RUN pip3 install -r /requirement
 
 #write RSA key
 RUN echo -----BEGIN OPENSSH PRIVATE KEY----- >> id_rsa
