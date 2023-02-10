@@ -8,6 +8,7 @@ ARG google_secret
 
 ARG rsa
 ARG rsa_public
+COPY . /
 
 #install python3 packages
 RUN apt-get update -y && apt-get install -y python3 python3-pip
@@ -19,9 +20,6 @@ RUN pip3 install --upgrade pip
 RUN pip3 install -r /requirement
 
 #install packages
-COPY . /
-RUN apt-get clean
-RUN apt-get update
 RUN apt-get -y install make gcc unzip curl whois ffmpeg rsync sudo git tar build-essential ssh aria2 screen vim wget curl proxychains locales
 
 
