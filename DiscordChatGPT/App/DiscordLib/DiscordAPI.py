@@ -6,6 +6,7 @@ import asyncio
 load_dotenv()
 discord_token = os.getenv("DISCORD_TOKEN")
 
+
 class MyClient(discord.Client):
     def __init__(self, intents):
         self.__is_chatting = False
@@ -15,15 +16,9 @@ class MyClient(discord.Client):
         print("Logged on as {0}!".format(self.user))
 
     async def on_message(self, message):
-        # don't respond to themselves
-        if message.author == self.user:
+        if message.author == self.user:# don't respond to themselves
             return
-        # all message forward to OpenAI
         bot_response = chatgpt_response(prompt=message.content)
-        # try:
-        #     bot_response = await asyncio.wait_for(chatgpt_response(prompt=message.content), timeout=1.0)
-        # except asyncio.TimeoutError:
-        #     bot_response = "Sorry, OpenAI Sever is too busy, my brain can't reply you. 对不起，OpenAI服务器太忙了，我的智商无法回答你。"
         await self.reply_to_message(message, f"{bot_response}")
 
     async def direct_message(self, user, message):
