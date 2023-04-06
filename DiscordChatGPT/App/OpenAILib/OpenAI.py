@@ -12,9 +12,10 @@ headers = {
 
 def chatgpt_response(prompt):
     data = {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-4",
         "messages": [{"role": "user", "content": prompt}]
     }
+    print("ssssss")
     response_dict = requests.post(url, headers=headers, data=json.dumps(data)).json().get('choices')
     if response_dict and len(response_dict) > 0:
         return response_dict[0]['message']['content']
