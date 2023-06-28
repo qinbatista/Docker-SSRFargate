@@ -74,7 +74,7 @@ class SSRFargate:
         except Exception as e:
             self.__log(f"_post_ip_address:{str(e)} self.__current_ip_from_udp={str(self.__current_ip_from_udp)}")
 
-    def __post_client_to_google_DNS(self, client_verify_key, client_domain_name, client_ip):
+    def __post_client_to_google_DNS(self, client_ip, client_verify_key, client_domain_name):
         try:
             requests.post(f"https://{client_verify_key}@domains.google.com/nic/update?hostname={client_domain_name}&myip={client_ip}")
             self.__log(f"[client ddns] https://{client_verify_key}@domains.google.com/nic/update?hostname={client_domain_name}&myip={client_ip}")
