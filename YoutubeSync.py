@@ -121,6 +121,7 @@ class QinServer:
             for video_id in macmini_list:
                 file_download_log = open(f"{folder_path}/downloading.txt", "w+")
                 download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
+                self.__log(f"[download]{download_youtube_video_command}")
                 p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
                 p.wait()
 
@@ -129,7 +130,7 @@ class QinServer:
                     if item.endswith(".mp4"):
                         if os.path.exists(f"{folder_path}/{item}"):
                             os.rename(f"{folder_path}/{item}", f"{folder_path}/[{all_video_list[video_id]}]{item}")
-                            self.__NAS_sync(folder_path, folder_name)
+                            self.__macmini_sync(folder_path, folder_name)
                             self.__save_remove(f"{folder_path}/[{all_video_list[video_id]}]{item}")
                             self.__log(f"[Sent]{folder_path}/[{all_video_list[video_id]}]{item}")
 
@@ -222,9 +223,10 @@ class QinServer:
                     )
         return youtube_index
 
-    def __NAS_sync(self, folder_path, folder_name):
+    def __macmini_sync(self, folder_path, folder_name):
         if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
-            command = f'rsync -avz -I --include="*.mp4" --progress -e "ssh -p {self._storage_server_port}" {folder_path}/ root@{self._storage_server_ip}:/Video/{folder_name}'
+            command = f'rsync -avz -I --include="*.mp4" --progress -e "ssh -p {self._storage_server_port}" {folder_path}/ qinmini@{self._storage_server_ip}:/Users/qinmini/Library/Mobile\ Documents/com\~apple\~CloudDocs/Media/{folder_name}'
+            self.__log(f"[macmini_sync]{command}")
             file_sync_log = open(f"{folder_path}/sync.txt", "w+")
             p = subprocess.Popen(command, stdout=file_sync_log, stderr=file_sync_log, universal_newlines=True, shell=True,)
             p.wait()
