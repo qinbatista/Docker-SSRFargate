@@ -69,14 +69,16 @@ class SSRFargate:
             if self.__the_ip == self.__current_ip:
                 return
             else:
-                result = requests.post(
-                    f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip={self.__the_ip}"
-                )
+                result = requests.post(f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip={self.__the_ip}")
                 self.__current_ip = self.__the_ip
         except Exception as e:
-            self.__log(
-                f"_post_ip_address:{str(e)} self.__current_ip_from_udp={str(self.__current_ip_from_udp)}"
-            )
+            self.__log(f"_post_ip_address:{str(e)} self.__current_ip_from_udp={str(self.__current_ip_from_udp)}")
+
+    def __post_client_to_google_DNS(self, client_verify_key, client_domain_name, client_ip):
+        try:
+            requests.post(f"https://{client_verify_key}@domains.google.com/nic/update?hostname={client_domain_name}&myip={client_ip}")
+        except Exception as e:
+            self.__log(f"_post_ip_address:{str(e)} self.__current_ip_from_udp={str(self.__current_ip_from_udp)}")
 
     def _thread_IP_poster(self):
         thread_refresh = threading.Thread(target=self.__IP_poster, name="t1", args=())
@@ -125,9 +127,8 @@ class SSRFargate:
                         self.__inaccessible_count += 1
                 else:
                     self.__current_ip_from_udp = message
-                self.__log(
-                    f"{str(datetime.now(self.__CN_timezone))} self.__inaccessible_count:{self.__inaccessible_count} self.__is_connect={self.__is_connect} self.__current_ip_from_udp={self.__current_ip_from_udp} from:{ip}:{port} the_ip:{self.__the_ip} count:{self.__received_count}"
-                )
+                self.__log(f"{str(datetime.now(self.__CN_timezone))} self.__inaccessible_count:{self.__inaccessible_count} self.__is_connect={str(self.__is_connect)} self.__current_ip_from_udp={self.__current_ip_from_udp} from:{ip}:{port} the_ip:{self.__the_ip} count:{self.__received_count}")
+                self.__post_client_to_google_DNS(message[0], message[2], message[3])
         except Exception as e:
             self.__log(f"{str(e)}")
 
