@@ -12,6 +12,8 @@ from datetime import datetime
 import pytz
 import platform
 from ECSManager import ECSManager
+
+
 class SSRFargate:
     def __init__(self):
         # self.__region = _region
@@ -137,7 +139,7 @@ class SSRFargate:
         while True:
             try:
                 self.__received_count = self.__received_count - 1
-                if self.__inaccessible_count >= 3 or self.__received_count <= -60*24:
+                if self.__inaccessible_count >= 60*5 or self.__received_count <= -60*24:
                     self.__shutdown_current_ip()
                     self.__received_count = 0
                     self.__inaccessible_count = 0
@@ -145,6 +147,7 @@ class SSRFargate:
             except Exception as e:
                 # pass
                 self.__log(f"{str(e)}")\
+
 
     def __shutdown_current_ip(self):
         em = ECSManager()
@@ -178,7 +181,6 @@ class SSRFargate:
         )
         p.wait()
 
-
     def _thread_Discord(self):
         thread_refresh = threading.Thread(target=self.__Discord, name="t1", args=())
         thread_refresh.start()
@@ -190,6 +192,7 @@ class SSRFargate:
             shell=True,
         )
         p.wait()
+
 
 if __name__ == "__main__":
     sf = SSRFargate()
