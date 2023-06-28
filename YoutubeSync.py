@@ -92,33 +92,33 @@ class QinServer:
         # start download video list
         os.chdir(f"{folder_path}")
 
-        downloaded_video_list_local = self.__get_video_list_from_local(f"{folder_path}/NAS_video_list.txt", remote_folder_path)
-        downloaded_video_list_local = list(map(self.__extract_video_id, downloaded_video_list_local))
-        downloaded_video_list_local = list(filter(lambda x: x != '', downloaded_video_list_local))
+        video_list_macmini = self.__get_video_list_from_local(f"{folder_path}/NAS_video_list.txt", remote_folder_path)
+        video_list_macmini = list(map(self.__extract_video_id, video_list_macmini))
+        video_list_macmini = list(filter(lambda x: x != '', video_list_macmini))
 
-        downloaded_video_list_s3 = self.__get_video_list_from_S3(f"/Videos/{folder_name}/")
-        downloaded_video_list_s3 = list(map(self.__extract_video_id, downloaded_video_list_s3))
-        downloaded_video_list_s3 = list(filter(lambda x: x != '', downloaded_video_list_s3))
+        # video_list_s3 = self.__get_video_list_from_S3(f"/Videos/{folder_name}/")
+        # video_list_s3 = list(map(self.__extract_video_id, video_list_s3))
+        # video_list_s3 = list(filter(lambda x: x != '', video_list_s3))
 
-        youtube_download_list = self.__get_video_list_from_youtube(folder_path, url)
+        all_video_list = self.__get_video_list_from_youtube(folder_path, url)
 
-        if len(downloaded_video_list_local) == 0:
-            downloaded_video_list_1 = []
-        else:#8cylpXp_AQE
-            downloaded_video_list_1 = set(youtube_download_list.keys()) - set(downloaded_video_list_local)  # type: ignore
-
-        if len(downloaded_video_list_s3) == 0:
-            downloaded_video_list_2 = []
+        if len(video_list_macmini) == 0:
+            macmini_list = []
         else:
-            downloaded_video_list_2 = set(youtube_download_list.keys()) - set(downloaded_video_list_s3)  # type: ignore
+            macmini_list = set(all_video_list.keys()) - set(video_list_macmini)
+
+        # if len(video_list_s3) == 0:
+        #     s3_list = []
+        # else:
+        #     s3_list = set(all_video_list.keys()) - set(video_list_s3)
+
+        # if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
+        #     downloaded_video_list = macmini_list | s3_list
+        # else:
+        #     downloaded_video_list = s3_list
 
         if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
-            downloaded_video_list = downloaded_video_list_1 | downloaded_video_list_2
-        else:
-            downloaded_video_list = downloaded_video_list_2
-
-        if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
-            for video_id in downloaded_video_list_1:
+            for video_id in macmini_list:
                 file_download_log = open(f"{folder_path}/downloading.txt", "w+")
                 download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
                 p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
@@ -128,25 +128,25 @@ class QinServer:
                 for item in cache_video:
                     if item.endswith(".mp4"):
                         if os.path.exists(f"{folder_path}/{item}"):
-                            os.rename(f"{folder_path}/{item}", f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
+                            os.rename(f"{folder_path}/{item}", f"{folder_path}/[{all_video_list[video_id]}]{item}")
                             self.__NAS_sync(folder_path, folder_name)
-                            self.__save_remove(f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
-                            self.__log(f"[Sent]{folder_path}/[{youtube_download_list[video_id]}]{item}")
+                            self.__save_remove(f"{folder_path}/[{all_video_list[video_id]}]{item}")
+                            self.__log(f"[Sent]{folder_path}/[{all_video_list[video_id]}]{item}")
 
-        for video_id in downloaded_video_list_2:
-            file_download_log = open(f"{folder_path}/downloading.txt", "w+")
-            download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
-            p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
-            p.wait()
+        # for video_id in s3_list:
+        #     file_download_log = open(f"{folder_path}/downloading.txt", "w+")
+        #     download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
+        #     p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
+        #     p.wait()
 
-            cache_video = os.listdir(folder_path)
-            for item in cache_video:
-                if item.endswith(".mp4"):
-                    if os.path.exists(f"{folder_path}/{item}"):
-                        os.rename(f"{folder_path}/{item}", f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
-                        self.__s3_manager._sync_folder(folder_path, f"/Videos/{folder_name}")
-                        self.__save_remove(f"{folder_path}/[{youtube_download_list[video_id]}]{item}")
-                        self.__log(f"[Sent]{folder_path}/[{youtube_download_list[video_id]}]{item}")
+        #     cache_video = os.listdir(folder_path)
+        #     for item in cache_video:
+        #         if item.endswith(".mp4"):
+        #             if os.path.exists(f"{folder_path}/{item}"):
+        #                 os.rename(f"{folder_path}/{item}", f"{folder_path}/[{all_video_list[video_id]}]{item}")
+        #                 self.__s3_manager._sync_folder(folder_path, f"/Videos/{folder_name}")
+        #                 self.__save_remove(f"{folder_path}/[{all_video_list[video_id]}]{item}")
+        #                 self.__log(f"[Sent]{folder_path}/[{all_video_list[video_id]}]{item}")
 
     def __is_json(self, myjson):
         try:
@@ -161,7 +161,7 @@ class QinServer:
             s.settimeout(5)
             s.connect((ip, port))
             s.close()
-            os.system('rsync -avz --progress -e "ssh -o stricthostkeychecking=no -p 10022" /download root@cq.qinyupeng.com:~/')
+            os.system('rsync -avz --progress -e "ssh -o stricthostkeychecking=no -p 10022" /download macmini@cq.qinyupeng.com:/Users/qinmini/Library/Mobile\ Documents/com\~apple\~CloudDocs/Media')
             return True
         except Exception as error:
             self.__log(f"[__isServerOpening]"+str(error))
@@ -179,7 +179,7 @@ class QinServer:
     def __get_video_list_from_local(self, path_NAS_video_list, remote_folder_path):
         if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
             file_downloaded_video_list = open(path_NAS_video_list, "w+")
-            command_remote_video_list = f"ssh -p {self._storage_server_port} root@{self._storage_server_ip} 'ls {remote_folder_path[0]}'"
+            command_remote_video_list = f"ssh -p {self._storage_server_port} qinmini@{self._storage_server_ip} 'ls -al /Users/qinmini/Library/Mobile\ Documents/com\~apple\~CloudDocs/Media/{remote_folder_path[0]}'"
             p = subprocess.Popen(
                 command_remote_video_list,
                 stdout=file_downloaded_video_list,
