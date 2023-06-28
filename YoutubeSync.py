@@ -92,47 +92,48 @@ class QinServer:
         # start download video list
         os.chdir(f"{folder_path}")
 
-        video_list_macmini = self.__get_video_list_from_local(f"{folder_path}/NAS_video_list.txt", remote_folder_path)
-        video_list_macmini = list(map(self.__extract_video_id, video_list_macmini))
-        video_list_macmini = list(filter(lambda x: x != '', video_list_macmini))
-
-        # video_list_s3 = self.__get_video_list_from_S3(f"/Videos/{folder_name}/")
-        # video_list_s3 = list(map(self.__extract_video_id, video_list_s3))
-        # video_list_s3 = list(filter(lambda x: x != '', video_list_s3))
-
-        all_video_list = self.__get_video_list_from_youtube(folder_path, url)
-
-        if len(video_list_macmini) == 0:
-            macmini_list = []
-        else:
-            macmini_list = set(all_video_list.keys()) - set(video_list_macmini)
-
-        # if len(video_list_s3) == 0:
-        #     s3_list = []
-        # else:
-        #     s3_list = set(all_video_list.keys()) - set(video_list_s3)
-
-        # if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
-        #     downloaded_video_list = macmini_list | s3_list
-        # else:
-        #     downloaded_video_list = s3_list
-
         if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
-            for video_id in macmini_list:
-                file_download_log = open(f"{folder_path}/downloading.txt", "w+")
-                download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
-                self.__log(f"[download]{download_youtube_video_command}")
-                p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
-                p.wait()
+            video_list_macmini = self.__get_video_list_from_local(f"{folder_path}/NAS_video_list.txt", remote_folder_path)
+            video_list_macmini = list(map(self.__extract_video_id, video_list_macmini))
+            video_list_macmini = list(filter(lambda x: x != '', video_list_macmini))
 
-                cache_video = os.listdir(folder_path)
-                for item in cache_video:
-                    if item.endswith(".mp4"):
-                        if os.path.exists(f"{folder_path}/{item}"):
-                            os.rename(f"{folder_path}/{item}", f"{folder_path}/[{all_video_list[video_id]}]{item}")
-                            self.__macmini_sync(folder_path, folder_name)
-                            self.__save_remove(f"{folder_path}/[{all_video_list[video_id]}]{item}")
-                            self.__log(f"[Sent]{folder_path}/[{all_video_list[video_id]}]{item}")
+            # video_list_s3 = self.__get_video_list_from_S3(f"/Videos/{folder_name}/")
+            # video_list_s3 = list(map(self.__extract_video_id, video_list_s3))
+            # video_list_s3 = list(filter(lambda x: x != '', video_list_s3))
+
+            all_video_list = self.__get_video_list_from_youtube(folder_path, url)
+
+            if len(video_list_macmini) == 0:
+                macmini_list = []
+            else:
+                macmini_list = set(all_video_list.keys()) - set(video_list_macmini)
+
+            # if len(video_list_s3) == 0:
+            #     s3_list = []
+            # else:
+            #     s3_list = set(all_video_list.keys()) - set(video_list_s3)
+
+            # if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
+            #     downloaded_video_list = macmini_list | s3_list
+            # else:
+            #     downloaded_video_list = s3_list
+
+            if self.__isServerOpening(self._storage_server_ip, self._storage_server_port):
+                for video_id in macmini_list:
+                    file_download_log = open(f"{folder_path}/downloading.txt", "w+")
+                    download_youtube_video_command = f"{self.__downloader} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --cookies {self.__cookie_file} --merge-output-format mp4 https://www.youtube.com/watch?v={video_id}"
+                    self.__log(f"[download]{download_youtube_video_command}")
+                    p = subprocess.Popen(download_youtube_video_command, stdout=file_download_log, stderr=file_download_log, universal_newlines=True, shell=True)
+                    p.wait()
+
+                    cache_video = os.listdir(folder_path)
+                    for item in cache_video:
+                        if item.endswith(".mp4"):
+                            if os.path.exists(f"{folder_path}/{item}"):
+                                os.rename(f"{folder_path}/{item}", f"{folder_path}/[{all_video_list[video_id]}]{item}")
+                                self.__macmini_sync(folder_path, folder_name)
+                                self.__save_remove(f"{folder_path}/[{all_video_list[video_id]}]{item}")
+                                self.__log(f"[Sent]{folder_path}/[{all_video_list[video_id]}]{item}")
 
         # for video_id in s3_list:
         #     file_download_log = open(f"{folder_path}/downloading.txt", "w+")
