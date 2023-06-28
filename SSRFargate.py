@@ -128,7 +128,7 @@ class SSRFargate:
                         self.__inaccessible_count += 1
                 else:
                     self.__current_ip_from_udp = message
-                self.__log(f"{str(datetime.now(self.__CN_timezone))} Server IP:{self.__the_ip} self.__inaccessible_count:{self.__inaccessible_count} count:{self.__received_count} client message IP={self.__current_ip_from_udp} from:{ip}:{port}")
+                self.__log(f"{str(datetime.now(self.__CN_timezone))} Server IP:{self.__the_ip} self.__inaccessible_count:{self.__inaccessible_count} 60*24 mins restart :{self.__received_count} client message IP={self.__current_ip_from_udp} from:{ip}:{port}")
                 self.__post_client_to_google_DNS(message[0], message[2], message[3])
         except Exception as e:
             self.__log(f"{str(e)}")
