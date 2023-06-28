@@ -141,7 +141,7 @@ class SSRFargate:
         while True:
             try:
                 self.__received_count = self.__received_count - 1
-                if self.__inaccessible_count >= 60*5 or self.__received_count <= -60*24:
+                if self.__inaccessible_count >= 5 or self.__received_count <= -60*24:
                     self.__shutdown_current_ip()
                     self.__received_count = 0
                     self.__inaccessible_count = 0
