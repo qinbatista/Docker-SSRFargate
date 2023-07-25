@@ -14,8 +14,8 @@ ARG rsa_public
 COPY . /
 
 #add discord setting
-RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}{}" >> /DiscordChatGPT/.env
-RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}{}" >> /DiscordChatGPT/.env
+RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
+RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 
 
 
