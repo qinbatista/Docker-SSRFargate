@@ -108,6 +108,7 @@ class SSRFargate:
         )
         thread_refresh.start()
 
+
     def __listening_CN(self):
         try:
             self.__udpServer = socket(AF_INET, SOCK_DGRAM)
