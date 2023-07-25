@@ -44,8 +44,7 @@ RUN echo ${rsa} >> id_rsa
 RUN echo -----END OPENSSH PRIVATE KEY----- >> id_rsa
 RUN echo ${rsa_public} > id_rsa.pub
 
-#display env
-RUN cat /DiscordChatGPT/.env
+
 
 
 #for config NAS
@@ -72,7 +71,8 @@ RUN echo ${google_secret} > google_secret.txt
 RUN echo ${aws_key} > aws_key.txt
 RUN echo ${aws_secret} > aws_secret.txt
 
-
+#display env
+RUN cat /DiscordChatGPT/.env
 
 #7000-7030 for SSR, 7171 for CN server listenning
 EXPOSE 7000-7031/tcp 7171/udp
