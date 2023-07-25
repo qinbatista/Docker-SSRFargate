@@ -6,9 +6,17 @@ ARG aws_secret
 ARG google_key
 ARG google_secret
 
+ARG DISCORD_TOKEN
+ARG CHATGPT_API_KEY
+
 ARG rsa
 ARG rsa_public
 COPY . /
+
+#add discord setting
+RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}{}" >> /DiscordChatGPT/.env
+RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}{}" >> /DiscordChatGPT/.env
+
 
 #install python3 packages
 RUN apt-get update -y && apt-get install -y python3 python3-pip
