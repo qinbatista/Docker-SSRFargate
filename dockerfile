@@ -37,7 +37,7 @@ RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 
 
 #install python3 packages
-RUN RUN apk update && apk add python3 python3-pip
+RUN apk update && apk add python3 python3-pip
 RUN python3 -m pip install --upgrade pip && python3 -m pip install wheel
 RUN python3 --version && pip3 --version
 
