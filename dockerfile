@@ -46,7 +46,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install -r /requirement
 
 #install packages
-RUN apk add make gcc unzip curl whois ffmpeg rsync sudo git tar build-base openssh aria2 screen vim wget curl proxychains-ng
+RUN apk add bash make gcc unzip curl whois ffmpeg rsync sudo git tar build-base openssh aria2 screen vim wget curl proxychains-ng
 
 
 #install SSR
