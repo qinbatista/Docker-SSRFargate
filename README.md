@@ -8,7 +8,7 @@ docker run -itdv /root/download:/download qinbatista/ssrfargateqin
 ```
 
 ```
-docker run -itdv /home/admin/download:/download -p 7000-7030:7000-7030 qinbatista/ssrfargateqin
+docker run -itdv /home/admin/download:/download -p 7000-7030:7000-7030 -p 8000:8000 -p 7171/udp qinbatista/ssrfargateqin
 ```
 
 ## How to use it?
@@ -66,8 +66,8 @@ Your SSRFargateDockerLogin should contain:
 Once you push this project, the docker action will build this image and push it to docker, then the Git Action will close the Fargate Container from AWS ECS, but your AWS ECS services will always open a new docker, so your new docker image will be pulled to the AWS ECS task.
 
 ## Check if IP is banned from other regions.
-- The SSRFargate will open a 7171 port to receive messages from other regions. 
-- If you want to test if this region is able to use the server, send a UPD message like `1.1.1.1,0` the `1.1.1.1` means target IP, and the `0` means you connect successfully (`1` means connect failed). 
+- The SSRFargate will open a 7171 port to receive messages from other regions.
+- If you want to test if this region is able to use the server, send a UPD message like `1.1.1.1,0` the `1.1.1.1` means target IP, and the `0` means you connect successfully (`1` means connect failed).
 - Your testing server should consist of trying to connect the SSRFargate.
 - once the testing server sent 3 times to connect failed, the target server will close itself, but ECS->services will open a new one with new IP, then you just wait for the GoogleDDNS to refresh your IP.
 
@@ -75,20 +75,20 @@ Once you push this project, the docker action will build this image and push it 
 
 Check the `ssr.json` in this repository
 
-- Default ports are `7000-7030`, 
+- Default ports are `7000-7030`,
 
 - The default password is `qwer1234`,
- 
+
 - Default encryptions are:
 
  `"method":"chacha20"`
- 
+
  `"protocol":"auth_chain_b"`
- 
+
  `"obfs":"tls1.2_ticket_auth",`
- 
-More encryptions from [here](https://github.com/shadowsocksrr/shadowsocks-rss/blob/master/ssr.md), each of them has its own advantage and disadvantage. Default encryption chooses the safest encryption. 
+
+More encryptions from [here](https://github.com/shadowsocksrr/shadowsocks-rss/blob/master/ssr.md), each of them has its own advantage and disadvantage. Default encryption chooses the safest encryption.
 
 ## Check Docker health
-- the port 7031 is opened for HTTP accessing 
+- the port 7031 is opened for HTTP accessing
 
