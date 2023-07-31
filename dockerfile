@@ -1,4 +1,4 @@
-FROM debian:11-slim
+FROM alpine:3.18.2
 
 ARG aws_key
 ARG aws_secret
@@ -13,6 +13,23 @@ ARG rsa
 ARG rsa_public
 COPY . /
 
+#add v2ray
+WORKDIR /tmp
+ARG TARGETPLATFORM
+ARG TAG
+COPY v2ray.sh "${WORKDIR}"/v2ray.sh
+RUN set -ex \
+    && apk add --no-cache ca-certificates \
+    && mkdir -p /etc/v2ray /usr/local/share/v2ray /var/log/v2ray \
+    # forward request and error logs to docker log collector
+    && ln -sf /dev/stdout /var/log/v2ray/access.log \
+    && ln -sf /dev/stderr /var/log/v2ray/error.log \
+    && chmod +x "${WORKDIR}"/v2ray.sh \
+    && "${WORKDIR}"/v2ray.sh "${TARGETPLATFORM}" "${TAG}"
+RUN mv -f /v2ray.json /etc/v2ray/config.json
+WORKDIR /
+
+
 #add discord setting
 RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
 RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
@@ -20,7 +37,7 @@ RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 
 
 #install python3 packages
-RUN apt-get update -y && apt-get install -y python3 python3-pip
+RUN RUN apk update && apk add python3 python3-pip
 RUN python3 -m pip install --upgrade pip && python3 -m pip install wheel
 RUN python3 --version && pip3 --version
 
@@ -29,7 +46,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install -r /requirement
 
 #install packages
-RUN apt-get -y install make gcc unzip curl whois ffmpeg rsync sudo git tar build-essential ssh aria2 screen vim wget curl proxychains locales
+RUN apk add make gcc unzip curl whois ffmpeg rsync sudo git tar build-essential ssh aria2 screen vim wget curl proxychains locales
 
 
 #install SSR
