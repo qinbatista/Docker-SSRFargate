@@ -94,13 +94,20 @@ class SSRFargate:
         thread_refresh = threading.Thread(target=self.__SSR, name="t1", args=())
         thread_refresh.start()
 
+        thread_refresh = threading.Thread(target=self.__V2ray, name="t1", args=())
+        thread_refresh.start()
+
     def __SSR(self):
+        print("SSR start")
         p = subprocess.Popen(
             "python /usr/local/ssr/shadowsocks/server.py -c /etc/ssr.json",
             universal_newlines=True,
             shell=True,
         )
         p.wait()
+
+    def __V2ray(self):
+        print("V2ray start")
         p = subprocess.Popen(
             "v2ray run -c /etc/v2ray/config.json",
             universal_newlines=True,
@@ -113,7 +120,6 @@ class SSRFargate:
             target=self.__listening_CN, name="t1", args=()
         )
         thread_refresh.start()
-
 
     def __listening_CN(self):
         try:
