@@ -46,9 +46,9 @@ RUN pip3 install -r /requirement
 RUN apk add bash make gcc unzip curl whois ffmpeg rsync sudo git tar build-base openssh aria2 screen vim wget curl proxychains-ng
 
 #install SSR
-RUN chmod 777 ssr-install.sh
-RUN bash ssr-install.sh
-RUN cp ssr.json /etc/ssr.json
+# RUN chmod 777 ssr-install.sh
+# RUN bash ssr-install.sh
+# RUN cp ssr.json /etc/ssr.json
 
 #write RSA key
 RUN echo -----BEGIN OPENSSH PRIVATE KEY----- >> id_rsa
@@ -78,8 +78,8 @@ RUN echo ${google_secret} > google_secret.txt
 RUN echo ${aws_key} > aws_key.txt
 RUN echo ${aws_secret} > aws_secret.txt
 
-#7000-7030 for SSR, 7171 for CN server listenning
-EXPOSE 7000-7031/tcp 7171/udp 8000/tcp
+#7171 for CN server listenning, 7031 for http, 8000 for V2ray
+EXPOSE 7171/udp 7031/tcp 8000/tcp
 
 #folder for download
 VOLUME [ "/download"]

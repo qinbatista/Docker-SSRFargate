@@ -91,8 +91,8 @@ class SSRFargate:
             time.sleep(10)
 
     def _thread_VPN(self):
-        thread_refresh = threading.Thread(target=self.__SSR, name="t1", args=())
-        thread_refresh.start()
+        # thread_refresh = threading.Thread(target=self.__SSR, name="t1", args=())
+        # thread_refresh.start()
 
         thread_refresh = threading.Thread(target=self.__V2ray, name="t1", args=())
         thread_refresh.start()
