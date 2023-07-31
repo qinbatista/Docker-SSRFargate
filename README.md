@@ -3,12 +3,9 @@
 ## What it is?
 This is a docker source code of SSR based on open encryption connection. More info about [SSR](https://github.com/shadowsocksrr/shadowsocksr). The docker can be deployed on AWS->ECS->Fargata container which is the cheapest docker container right now, around $2/month.\
 
-```
-docker run -itdv /root/download:/download qinbatista/ssrfargateqin
-```
 
 ```
-docker run -itdv /home/admin/download:/download -p 7000-7030:7000-7030 -p 8000:8000 -p 7171/udp qinbatista/ssrfargateqin
+docker run -itdv /home/admin/download:/download -p 7031:7031 -p 8000:8000 -p 7171/udp qinbatista/ssrfargateqin
 ```
 
 ## How to use it?
