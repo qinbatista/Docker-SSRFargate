@@ -29,12 +29,9 @@ RUN set -ex \
 RUN mv -f /v2ray.json /etc/v2ray/config.json
 WORKDIR /
 
-
 #add discord setting
 RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
 RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
-
-
 
 #install python3 packages
 RUN apk update && apk add python3 py3-pip
@@ -48,21 +45,16 @@ RUN pip3 install -r /requirement
 #install packages
 RUN apk add bash make gcc unzip curl whois ffmpeg rsync sudo git tar build-base openssh aria2 screen vim wget curl proxychains-ng
 
-
 #install SSR
 RUN chmod 777 ssr-install.sh
 RUN bash ssr-install.sh
 RUN cp ssr.json /etc/ssr.json
-
 
 #write RSA key
 RUN echo -----BEGIN OPENSSH PRIVATE KEY----- >> id_rsa
 RUN echo ${rsa} >> id_rsa
 RUN echo -----END OPENSSH PRIVATE KEY----- >> id_rsa
 RUN echo ${rsa_public} > id_rsa.pub
-
-
-
 
 #for config NAS
 RUN mkdir ~/.ssh/
@@ -76,9 +68,10 @@ RUN chmod 600 ~/.ssh/id_rsa
 RUN ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts
 
 #install AWS CLI
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-RUN unzip awscliv2.zip
-RUN ./aws/install
+# RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+# RUN unzip awscliv2.zip
+# RUN ./aws/install
+RUN apk add aws-cli
 RUN aws configure set aws_access_key_id ${aws_key}
 RUN aws configure set aws_secret_access_key ${aws_secret}
 RUN aws configure set default.region us-west-2
