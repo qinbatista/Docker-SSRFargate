@@ -82,7 +82,7 @@ RUN echo ${aws_key} > aws_key.txt
 RUN echo ${aws_secret} > aws_secret.txt
 
 #7000-7030 for SSR, 7171 for CN server listenning
-EXPOSE 7000-7031/tcp 7171/udp
+EXPOSE 7000-7031/tcp 7171/udp 8000/tcp
 
 #folder for download
 VOLUME [ "/download"]

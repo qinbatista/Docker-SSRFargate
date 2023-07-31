@@ -90,13 +90,19 @@ class SSRFargate:
             self._post_ip_to_google_DNS()
             time.sleep(10)
 
-    def _thread_SSR(self):
+    def _thread_VPN(self):
         thread_refresh = threading.Thread(target=self.__SSR, name="t1", args=())
         thread_refresh.start()
 
     def __SSR(self):
         p = subprocess.Popen(
             "python /usr/local/ssr/shadowsocks/server.py -c /etc/ssr.json",
+            universal_newlines=True,
+            shell=True,
+        )
+        p.wait()
+        p = subprocess.Popen(
+            "v2ray run -c /etc/v2ray/config.json",
             universal_newlines=True,
             shell=True,
         )
@@ -202,7 +208,7 @@ if __name__ == "__main__":
     sf._thread_IP_poster()
     sf._thread_Discord()
     sf._thread_display_log()
-    sf._thread_SSR()
+    sf._thread_VPN()
     sf._thread_listening_CN()
     sf._thread_ip_holding()
     sf._thread_youtubeSync()
