@@ -1,4 +1,4 @@
-https://us.qinyupeng.com:8000 {
+https://us.qinyupeng.com {
     root * /usr/share/caddy
     file_server
 log {
@@ -14,5 +14,5 @@ tls {
     header Connection Upgrade
     header Upgrade websocket
 }
-reverse_proxy @v2ray_websocket 0.0.0.0:8000
+reverse_proxy @v2ray_websocket 127.0.0.1:8000
 }

@@ -17,6 +17,7 @@ COPY . /
 WORKDIR /tmp
 ARG TARGETPLATFORM
 ARG TAG
+
 COPY v2ray.sh "${WORKDIR}"/v2ray.sh
 RUN set -ex \
     && apk add --no-cache ca-certificates \
@@ -27,11 +28,11 @@ RUN set -ex \
     && chmod +x "${WORKDIR}"/v2ray.sh \
     && "${WORKDIR}"/v2ray.sh "${TARGETPLATFORM}" "${TAG}"
 RUN mv -f /v2ray.json /etc/v2ray/config.json
-WORKDIR /
 
 #install caddy
 RUN apk add caddy
 RUN mv -f /Caddyfile /etc/caddy/Caddyfile
+WORKDIR /
 
 #add discord setting
 RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
@@ -83,7 +84,7 @@ RUN echo ${aws_key} > aws_key.txt
 RUN echo ${aws_secret} > aws_secret.txt
 
 #7171 for CN server listenning, 7031 for http, 8000 for V2ray
-EXPOSE 7171/udp 7031/tcp 443/tcp 8000/tcp
+EXPOSE 7171/udp 7031/tcp 443/tcp
 
 #folder for download
 VOLUME [ "/download"]
