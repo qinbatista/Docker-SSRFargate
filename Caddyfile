@@ -1,4 +1,4 @@
-https://timov4.qinyupeng.com {
+https://us.qinyupeng.com {
     root * /usr/share/caddy
     file_server
 log {
