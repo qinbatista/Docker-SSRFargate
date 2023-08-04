@@ -89,7 +89,7 @@ EXPOSE 7171/udp 7031/tcp 443/tcp
 VOLUME [ "/download"]
 
 WORKDIR /root
-
+RUN apk add supervisor
 RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "nodaemon=true" >> /etc/supervisord.conf \
     && echo "[program:caddy]" >> /etc/supervisord.conf \
