@@ -29,6 +29,10 @@ RUN set -ex \
 RUN mv -f /v2ray.json /etc/v2ray/config.json
 WORKDIR /
 
+#install caddy
+RUN apk add caddy
+RUN mv -f /Caddyfile /etc/caddy/Caddyfile
+
 #add discord setting
 RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
 RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
@@ -79,10 +83,20 @@ RUN echo ${aws_key} > aws_key.txt
 RUN echo ${aws_secret} > aws_secret.txt
 
 #7171 for CN server listenning, 7031 for http, 8000 for V2ray
-EXPOSE 7171/udp 7031/tcp 8000/tcp
+EXPOSE 7171/udp 7031/tcp 443/tcp
 
 #folder for download
 VOLUME [ "/download"]
 
 WORKDIR /root
-CMD  ["python3","/SSRFargate.py"]
+
+RUN echo "[supervisord]" > /etc/supervisord.conf \
+    && echo "nodaemon=true" >> /etc/supervisord.conf \
+    && echo "[program:caddy]" >> /etc/supervisord.conf \
+    && echo "command=caddy run --config /etc/caddy/Caddyfile" >> /etc/supervisord.conf \
+    && echo "[program:v2ray]" >> /etc/supervisord.conf \
+    && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf \
+    && echo "[program:ssrf]" >> /etc/supervisord.conf \
+    && echo "command=python3 /SSRFargate.py" >> /etc/supervisord.conf
+
+CMD ["supervisord", "-c", "/etc/supervisord.conf"]
