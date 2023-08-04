@@ -69,7 +69,7 @@ class SSRFargate:
             if self.__the_ip == self.__current_ip:
                 return
             else:
-                result = requests.post(f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip={self.__the_ip}")
+                result = requests.post(f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=ustest.qinyupeng.com&myip={self.__the_ip}")
                 self.__current_ip = self.__the_ip
         except Exception as e:
             self.__log(f"_post_ip_address:{str(e)} self.__current_ip_from_udp={str(self.__current_ip_from_udp)}")
