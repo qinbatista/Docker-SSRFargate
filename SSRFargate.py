@@ -69,7 +69,7 @@ class SSRFargate:
             if self.__the_ip == self.__current_ip:
                 return
             else:
-                result = requests.post(f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=ustest.qinyupeng.com&myip={self.__the_ip}")
+                result = requests.post(f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip={self.__the_ip}")
                 self.__current_ip = self.__the_ip
         except Exception as e:
             self.__log(f"_post_ip_address:{str(e)} self.__current_ip_from_udp={str(self.__current_ip_from_udp)}")
@@ -91,8 +91,8 @@ class SSRFargate:
             time.sleep(10)
 
     def _thread_VPN(self):
-        thread_refresh = threading.Thread(target=self.__SSR, name="t1", args=())
-        thread_refresh.start()
+        # thread_refresh = threading.Thread(target=self.__SSR, name="t1", args=())
+        # thread_refresh.start()
 
         thread_refresh = threading.Thread(target=self.__V2ray, name="t1", args=())
         thread_refresh.start()
@@ -214,7 +214,7 @@ if __name__ == "__main__":
     sf._thread_IP_poster()
     sf._thread_Discord()
     sf._thread_display_log()
-    sf._thread_VPN()
+    # sf._thread_VPN()
     sf._thread_listening_CN()
     sf._thread_ip_holding()
     sf._thread_youtubeSync()
