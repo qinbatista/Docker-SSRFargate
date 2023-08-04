@@ -99,26 +99,16 @@ class SSRFargate:
 
     def __SSR(self):
         print("SSR start")
-        p = subprocess.Popen(
-            "python /usr/local/ssr/shadowsocks/server.py -c /etc/ssr.json",
-            universal_newlines=True,
-            shell=True,
-        )
+        p = subprocess.Popen("python /usr/local/ssr/shadowsocks/server.py -c /etc/ssr.json",universal_newlines=True,shell=True,)
         p.wait()
 
     def __V2ray(self):
         print("V2ray start")
-        p = subprocess.Popen(
-            "v2ray run -c /etc/v2ray/config.json",
-            universal_newlines=True,
-            shell=True,
-        )
+        p = subprocess.Popen("v2ray run -c /etc/v2ray/config.json",universal_newlines=True,shell=True,)
         p.wait()
 
     def _thread_listening_CN(self):
-        thread_refresh = threading.Thread(
-            target=self.__listening_CN, name="t1", args=()
-        )
+        thread_refresh = threading.Thread(target=self.__listening_CN, name="t1", args=())
         thread_refresh.start()
 
     def __listening_CN(self):
@@ -173,11 +163,7 @@ class SSRFargate:
         thread_refresh.start()
 
     def __display_log(self):
-        p = subprocess.Popen(
-            "python3 /HttpRequest.py",
-            universal_newlines=True,
-            shell=True,
-        )
+        p = subprocess.Popen("python3 /HttpRequest.py",universal_newlines=True,shell=True,)
         p.wait()
 
     def _running(self):
@@ -189,11 +175,7 @@ class SSRFargate:
         thread_refresh.start()
 
     def __youtubeSync(self):
-        p = subprocess.Popen(
-            "python3 /YoutubeSync.py",
-            universal_newlines=True,
-            shell=True,
-        )
+        p = subprocess.Popen("python3 /YoutubeSync.py", universal_newlines=True, shell=True,)
         p.wait()
 
     def _thread_Discord(self):
@@ -201,21 +183,31 @@ class SSRFargate:
         thread_refresh.start()
 
     def __Discord(self):
-        p = subprocess.Popen(
-            "python3 /DiscordChatGPT/run.py",
-            universal_newlines=True,
-            shell=True,
-        )
+        p = subprocess.Popen("python3 /DiscordChatGPT/run.py", universal_newlines=True, shell=True,)
+        p.wait()
+
+    def _thread_Caddy(self):
+        thread_refresh = threading.Thread(target=self.__Caddy, name="t1", args=())
+        thread_refresh.start()
+
+    def __Caddy(self):
+        while True:
+            time.sleep(10)
+            print(requests.get("https://checkip.amazonaws.com").text.strip()+" " + gethostbyname("us.qinyupeng.com"))
+            if requests.get("https://checkip.amazonaws.com").text.strip() == gethostbyname("us.qinyupeng.com"):
+                break
+        p = subprocess.Popen("caddy run --config /etc/caddy/Caddyfile", universal_newlines=True, shell=True,)
         p.wait()
 
 
 if __name__ == "__main__":
     sf = SSRFargate()
-    # sf._thread_IP_poster()
-    # sf._thread_Discord()
+    sf._thread_IP_poster()
+    sf._thread_Discord()
     sf._thread_display_log()
-    # sf._thread_VPN()
-    # sf._thread_listening_CN()
+    sf._thread_VPN()
+    sf._thread_listening_CN()
     sf._thread_ip_holding()
-    # sf._thread_youtubeSync()
+    sf._thread_youtubeSync()
+    sf._thread_Caddy()
     sf._running()
