@@ -1,4 +1,4 @@
-https://us.qinyupeng.com {
+https://testus.qinyupeng.com {
     root * /usr/share/caddy
     file_server
 log {
