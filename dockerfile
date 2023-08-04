@@ -17,7 +17,6 @@ COPY . /
 WORKDIR /tmp
 ARG TARGETPLATFORM
 ARG TAG
-
 COPY v2ray.sh "${WORKDIR}"/v2ray.sh
 RUN set -ex \
     && apk add --no-cache ca-certificates \
@@ -28,10 +27,6 @@ RUN set -ex \
     && chmod +x "${WORKDIR}"/v2ray.sh \
     && "${WORKDIR}"/v2ray.sh "${TARGETPLATFORM}" "${TAG}"
 RUN mv -f /v2ray.json /etc/v2ray/config.json
-
-#install caddy
-RUN apk add caddy
-RUN mv -f /Caddyfile /etc/caddy/Caddyfile
 WORKDIR /
 
 #add discord setting
@@ -51,9 +46,9 @@ RUN pip3 install -r /requirement
 RUN apk add bash make gcc unzip curl whois ffmpeg rsync sudo git tar build-base openssh aria2 screen vim wget curl proxychains-ng
 
 #install SSR
-# RUN chmod 777 ssr-install.sh
-# RUN bash ssr-install.sh
-# RUN cp ssr.json /etc/ssr.json
+RUN chmod 777 ssr-install.sh
+RUN bash ssr-install.sh
+RUN cp ssr.json /etc/ssr.json
 
 #write RSA key
 RUN echo -----BEGIN OPENSSH PRIVATE KEY----- >> id_rsa
@@ -83,21 +78,11 @@ RUN echo ${google_secret} > google_secret.txt
 RUN echo ${aws_key} > aws_key.txt
 RUN echo ${aws_secret} > aws_secret.txt
 
-#7171 for CN server listenning, 7031 for http, 8000 for V2ray
-EXPOSE 7171/udp 7031/tcp 443/tcp
+#7000-7030 for SSR, 7171 for CN server listenning
+EXPOSE 7000-7031/tcp 7171/udp 8000/tcp
 
 #folder for download
 VOLUME [ "/download"]
 
 WORKDIR /root
-RUN apk add supervisor
-RUN echo "[supervisord]" > /etc/supervisord.conf \
-    && echo "nodaemon=true" >> /etc/supervisord.conf \
-    && echo "[program:caddy]" >> /etc/supervisord.conf \
-    && echo "command=caddy run --config /etc/caddy/Caddyfile" >> /etc/supervisord.conf \
-    && echo "[program:v2ray]" >> /etc/supervisord.conf \
-    && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf \
-    && echo "[program:ssrf]" >> /etc/supervisord.conf \
-    && echo "command=python3 /SSRFargate.py" >> /etc/supervisord.conf
-
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+CMD  ["python3","/SSRFargate.py"]
