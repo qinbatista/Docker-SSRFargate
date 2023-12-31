@@ -29,6 +29,7 @@ RUN set -ex \
     && "${WORKDIR}"/v2ray.sh "${TARGETPLATFORM}" "${TAG}"
 RUN mv -f /v2ray.json /etc/v2ray/config.json
 
+
 #install caddy
 RUN apk add caddy
 RUN mv -f /Caddyfile /etc/caddy/Caddyfile
