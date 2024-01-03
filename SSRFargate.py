@@ -208,6 +208,6 @@ if __name__ == "__main__":
     sf._thread_VPN()
     sf._thread_listening_CN()
     sf._thread_ip_holding()
-    sf._thread_youtubeSync()
+    # sf._thread_youtubeSync()
     sf._thread_Caddy()
     sf._running()
