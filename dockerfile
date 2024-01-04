@@ -1,4 +1,4 @@
-FROM alpine:3.18.2
+FROM python:3.8.13-alpine3.16 as python
 
 ARG aws_key
 ARG aws_secret
@@ -40,9 +40,9 @@ RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
 RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 
 #install python3 packages
-RUN apk update && apk add python3.8 py3-pip
-RUN python3 -m pip install --upgrade pip && python3 -m pip install wheel
-RUN python3 --version && pip3 --version
+# RUN apk update && apk add python3.8 py3-pip
+# RUN python3 -m pip install --upgrade pip && python3 -m pip install wheel
+# RUN python3 --version && pip3 --version
 
 #install python3 packages
 RUN pip3 install --upgrade pip
