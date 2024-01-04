@@ -118,7 +118,7 @@ async def query_message(request: web.Request) -> web.Response:
 
 
 def run():
-    print("version:1.0")
+    print("HttpRequest:1.0")
     app = web.Application()
     app.add_routes(ROUTES)
     app["MANAGER"] = HttpRequestManager()
