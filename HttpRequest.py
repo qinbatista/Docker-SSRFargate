@@ -122,7 +122,7 @@ def run():
     app = web.Application()
     app.add_routes(ROUTES)
     app["MANAGER"] = HttpRequestManager()
-    web.run_app(app, port="7031")
+    web.run_app(app, port=7031)
 
 
 if __name__ == "__main__":
