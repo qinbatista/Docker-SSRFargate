@@ -40,7 +40,7 @@ RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
 RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 
 #install python3 packages
-RUN apk update && apk add python3 py3-pip
+RUN apk update && apk add python3=3.8.12-r3 py3-pip
 RUN python3 -m pip install --upgrade pip && python3 -m pip install wheel
 RUN python3 --version && pip3 --version
 
