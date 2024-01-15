@@ -13,12 +13,22 @@ ARG rsa
 ARG rsa_public
 COPY . /
 
-#add v2ray
+#[Start] V2ray--------------------------------------------------
 WORKDIR /tmp
-ARG TARGETPLATFORM
-ARG TAG
 
-COPY v2ray.sh "${WORKDIR}"/v2ray.sh
+#all variables are on github action
+ARG V2RAY_CADDY_CONFIG
+ARG V2RAY_CADDYFILE
+ARG V2RAY_DOWNLOADURL
+ARG V2RAY_TARGETPLATFORM
+ARG V2RAY_TAG
+
+#download caddy files
+
+
+
+#install v2ray
+COPY /Docker-V2rayServer/v2ray.sh "${WORKDIR}"/v2ray.sh
 RUN set -ex \
     && apk add --no-cache ca-certificates \
     && mkdir -p /etc/v2ray /usr/local/share/v2ray /var/log/v2ray \
@@ -26,14 +36,22 @@ RUN set -ex \
     && ln -sf /dev/stdout /var/log/v2ray/access.log \
     && ln -sf /dev/stderr /var/log/v2ray/error.log \
     && chmod +x "${WORKDIR}"/v2ray.sh \
-    && "${WORKDIR}"/v2ray.sh "${TARGETPLATFORM}" "${TAG}"
-RUN mv -f /v2ray.json /etc/v2ray/config.json
+    && "${WORKDIR}"/v2ray.sh "${V2RAY_TARGETPLATFORM}" "${V2RAY_TAG}" "${V2RAY_DOWNLOADURL}"
 
+RUN apk add wget
+RUN wget ${V2RAY_CADDYFILE}
+RUN wget ${V2RAY_CADDY_CONFIG}
+RUN mv -f ./v2rayconfig.json /etc/v2ray/config.json
 
 #install caddy
 RUN apk add caddy
-RUN mv -f /Caddyfile /etc/caddy/Caddyfile
-WORKDIR /
+RUN mv -f ./Caddyfile /etc/caddy/Caddyfile
+
+#remove all folder
+RUN rm -rf /tmp
+#[End] V2ray-----------------------------------------------------
+
+
 
 #add discord setting
 RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
