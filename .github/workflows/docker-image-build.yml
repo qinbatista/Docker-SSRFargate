@@ -23,6 +23,10 @@ jobs:
       - name: set AWS test
         run: aws configure set region us-west-2 --profile testing
 
+      - name: get submodule
+        run: git submodule update
+
+
       - uses: actions/checkout@v3
       - name: Build the Docker image
         run: docker build -t qinbatista/ssrfargateqin .
