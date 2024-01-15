@@ -1,0 +1,3 @@
+[submodule "Docker-V2rayServer"]
+	path = Docker-V2rayServer
+	url = https://github.com/qinbatista/Docker-V2rayServer.git
