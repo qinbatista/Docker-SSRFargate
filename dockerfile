@@ -23,10 +23,6 @@ ARG V2RAY_DOWNLOADURL
 ARG V2RAY_TARGETPLATFORM
 ARG V2RAY_TAG
 
-#download caddy files
-
-
-
 #install v2ray
 COPY /Docker-V2rayServer/v2ray.sh "${WORKDIR}"/v2ray.sh
 RUN set -ex \
