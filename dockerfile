@@ -2,39 +2,34 @@ FROM python:3.8.13-alpine3.16 as python
 
 COPY . /
 RUN pip3 install --upgrade pip
-#[Start] V2ray--------------------------------------------------
-WORKDIR /tmp
 
+#[Start] V2ray--------------------------------------------------
+RUN pip install -r /Docker-V2rayServer/requirements.txt
+WORKDIR /tmp
 #all variables are on github action
-ARG V2RAY_CADDY_CONFIG
-ARG V2RAY_CADDYFILE
+ARG V2RAY_ADDRESS
 ARG V2RAY_DOWNLOADURL
 ARG V2RAY_TARGETPLATFORM
 ARG V2RAY_TAG
-
-RUN ls /Docker-V2rayServer
-RUN pwd
-
+ENV V2RAY_ADDRESS=${V2RAY_ADDRESS}
+#install v2ray config
+RUN apk add wget
+RUN wget ${V2RAY_DOWNLOADURL}/${V2RAY_ADDRESS}/v2rayconfig.json
+RUN cat /tmp/v2rayconfig.json
 #install v2ray
-COPY /Docker-V2rayServer/v2ray.sh "${WORKDIR}"/v2ray.sh
+COPY v2ray.sh "${WORKDIR}"/v2ray.sh
 RUN set -ex \
     && apk add --no-cache ca-certificates \
     && mkdir -p /etc/v2ray /usr/local/share/v2ray /var/log/v2ray \
-    # forward request and error logs to docker log collector
     && ln -sf /dev/stdout /var/log/v2ray/access.log \
     && ln -sf /dev/stderr /var/log/v2ray/error.log \
     && chmod +x "${WORKDIR}"/v2ray.sh \
     && "${WORKDIR}"/v2ray.sh "${V2RAY_TARGETPLATFORM}" "${V2RAY_TAG}" "${V2RAY_DOWNLOADURL}"
-
-RUN apk add wget
-RUN wget ${V2RAY_CADDYFILE}
-RUN wget ${V2RAY_CADDY_CONFIG}
-RUN mv -f ./v2rayconfig.json /etc/v2ray/config.json
-
 #install caddy
 RUN apk add caddy
-RUN mv -f ./Caddyfile /etc/caddy/Caddyfile
-RUN pip install -r /Docker-V2rayServer/requirements.txt
+RUN wget ${V2RAY_DOWNLOADURL}/${V2RAY_ADDRESS}/Caddyfile
+RUN cat /tmp/Caddyfile
+RUN mv -f /tmp/Caddyfile /etc/caddy/Caddyfile
 #remove all folder
 RUN rm -rf /tmp
 #[End] V2ray-----------------------------------------------------
@@ -110,15 +105,21 @@ RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "nodaemon=true" >> /etc/supervisord.conf \
     # && echo "[program:ssrf]" >> /etc/supervisord.conf \
     # && echo "command=python3 /SSRFargate.py" >> /etc/supervisord.conf \
+
+    #google ddns
     && echo "[program:googleddns]" >> /etc/supervisord.conf \
     && echo "command=python3  /Docker-GoogleDDNSClient/GoogleDDNSClient.py" >> /etc/supervisord.conf \
-    && echo "[program:caddy]" >> /etc/supervisord.conf \
-    && echo "command=caddy run --config /etc/caddy/Caddyfile" >> /etc/supervisord.conf \
+
+    #v2ray
+    && echo "[program:caddy-python]" >> /etc/supervisord.conf \
+    && echo "command=python3 /CaddyLauncher.py" >> /etc/supervisord.conf \
     && echo "[program:v2ray]" >> /etc/supervisord.conf \
     && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf\
+
+    #http helper
     && echo "[program:httphelper]" >> /etc/supervisord.conf \
     && echo "command=python3 /Docker-HTTPHelper/HTTPHelper.py" >> /etc/supervisord.conf
 
 #7171 for CN server listenning, 7031 for http, 443 for V2ray
-EXPOSE 7171/udp 7031/tcp 443/tcp
+EXPOSE 7171/udp 7001/tcp 443/tcp
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
