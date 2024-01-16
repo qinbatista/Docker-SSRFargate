@@ -1,13 +1,9 @@
 FROM python:3.8.13-alpine3.16 as python
 
-ARG aws_key
-ARG aws_secret
 
-ARG DISCORD_TOKEN
-ARG CHATGPT_API_KEY
 
-ARG rsa
-ARG rsa_public
+
+
 COPY . /
 
 #[Start] V2ray--------------------------------------------------
@@ -69,6 +65,8 @@ RUN echo ${DOMAIN_NAME_V4} > /DOMAIN_NAME_V4
 
 
 #add discord setting
+ARG DISCORD_TOKEN
+ARG CHATGPT_API_KEY
 RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
 RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 
@@ -85,6 +83,8 @@ RUN pip3 install -r /requirement
 RUN apk add bash make gcc unzip curl whois ffmpeg rsync sudo git tar build-base openssh aria2 screen vim wget curl proxychains-ng
 
 #write RSA key
+ARG rsa
+ARG rsa_public
 RUN echo -----BEGIN OPENSSH PRIVATE KEY----- >> id_rsa
 RUN echo ${rsa} >> id_rsa
 RUN echo -----END OPENSSH PRIVATE KEY----- >> id_rsa
@@ -102,16 +102,13 @@ RUN chmod 600 ~/.ssh/id_rsa
 RUN ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts
 
 #install AWS CLI
+ARG aws_key
+ARG aws_secret
 RUN apk add aws-cli
 RUN aws configure set aws_access_key_id ${aws_key}
 RUN aws configure set aws_secret_access_key ${aws_secret}
 RUN aws configure set default.region us-west-2
 RUN aws configure set region us-west-2 --profile testing
-
-
-
-#folder for download
-VOLUME [ "/download"]
 
 WORKDIR /
 RUN apk add supervisor
