@@ -53,7 +53,7 @@ RUN rm -rf /tmp
 
 #[Start] GoogleDDNS--------------------------------------------------
 
-WORKDIR /tmp
+WORKDIR /GoogleDDNSClient
 ARG GOOGLE_USERNAME_V6
 ARG GOOGLE_PASSWORD_V6
 ARG DOMAIN_NAME_V6
@@ -69,7 +69,6 @@ RUN echo ${GOOGLE_PASSWORD_V4} > GOOGLE_PASSWORD_V4
 RUN echo ${DOMAIN_NAME_V4} > DOMAIN_NAME_V4
 
 COPY /Docker-GoogleDDNSClient/GoogleDDNSClient.py /GoogleDDNSClient.py
-RUN rm -rf /tmp
 #[End] GoogleDDNS-----------------------------------------------------
 
 
