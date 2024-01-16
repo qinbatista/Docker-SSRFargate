@@ -131,8 +131,8 @@ RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "[program:ssrf]" >> /etc/supervisord.conf \
     && echo "command=python3 /SSRFargate.py" >> /etc/supervisord.conf \
 
-    # && echo "[program:googleddns]" >> /etc/supervisord.conf \
-    # && echo "command=python3  /Docker-GoogleDDNSClient/GoogleDDNSClient.py" >> /etc/supervisord.conf \
+    && echo "[program:googleddns]" >> /etc/supervisord.conf \
+    && echo "command=python3  /Docker-GoogleDDNSClient/GoogleDDNSClient.py" >> /etc/supervisord.conf \
 
     # && echo "[program:caddy]" >> /etc/supervisord.conf \
     # && echo "command=caddy run --config /etc/caddy/Caddyfile" >> /etc/supervisord.conf \
