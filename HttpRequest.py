@@ -24,21 +24,21 @@ class HttpRequestManager:
             content = f.readlines()
         return content
 
-    def _get_files(self):
+    def _get_files(self,path):
         files_dict = {}
         # Walk through all the files and subdirectories in the directory
-        for root, dirs, files in os.walk(self.__download):
+        for root, dirs, files in os.walk(path):
             # For each file, add its name and path to the dictionary
             for file in files:
                 file_path = os.path.join(root, file)
                 files_dict[file] = file_path
         return files_dict
 
-    async def _check_query(self, id):
-        if id == "download":
+    async def _check_query(self, path):
+        if os.path.isfile(path):
             return self._get_files()
         else:
-            return {"message": "no such id"}
+            return {"message": "no such folder"}
 
     async def _check_file_content(self, path):
         if os.path.isfile(path) == False:
