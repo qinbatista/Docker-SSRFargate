@@ -13,7 +13,7 @@ class HttpRequestManager:
             self.__log_file_location = "/Users/qin/Desktop/logs.txt"
             self.__download = "/Users/qin/Downloads"
         else:
-            self.__log_file_location = "/http_request_logs"
+            self.__log_file_location = "/http_request_logs.txt"
             self.__download = "/download"
 
     async def _get_log(self):
