@@ -13,7 +13,6 @@ ARG V2RAY_TAG
 ENV V2RAY_ADDRESS=${V2RAY_ADDRESS}
 #install v2ray config
 RUN apk add wget
-RUN wget ${V2RAY_DOWNLOADURL}/${V2RAY_ADDRESS}/Caddyfile
 RUN wget ${V2RAY_DOWNLOADURL}/${V2RAY_ADDRESS}/v2rayconfig.json
 
 RUN cat /tmp/v2rayconfig.json

@@ -33,14 +33,18 @@ jobs:
         run: docker build -t qinbatista/ssrfargateqin .
             --build-arg aws_key="${{ secrets.AWS_KEY }}"
             --build-arg aws_secret="${{ secrets.AWS_ACCESS }}"
+
             --build-arg DISCORD_TOKEN="${{ secrets.DISCORD_TOKEN }}"
             --build-arg CHATGPT_API_KEY="${{ secrets.CHATGPT_API_KEY }}"
+
             --build-arg rsa="${{ secrets.RSA }}"
             --build-arg rsa_public="${{ secrets.RSA_PUB }}"
+
             --build-arg V2RAY_ADDRESS="${{ vars.V2RAY_ADDRESS }}"
             --build-arg V2RAY_DOWNLOADURL="${{ vars.V2RAY_DOWNLOADURL }}"
             --build-arg V2RAY_TARGETPLATFORM="${{ vars.V2RAY_TARGETPLATFORM }}"
             --build-arg V2RAY_TAG="${{ vars.V2RAY_TAG }}"
+
             --build-arg DOMAIN_NAME_V4="${{ secrets.DOMAIN_NAME_V4 }}"
             --build-arg GOOGLE_USERNAME_V4="${{ secrets.GOOGLE_USERNAME_V4 }}"
             --build-arg GOOGLE_PASSWORD_V4="${{ secrets.GOOGLE_PASSWORD_V4 }}"
