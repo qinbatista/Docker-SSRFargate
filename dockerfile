@@ -121,10 +121,10 @@ RUN echo "[supervisord]" > /etc/supervisord.conf \
     # && echo "command=python3 /SSRFargate.py" >> /etc/supervisord.conf \
     && echo "[program:googleddns]" >> /etc/supervisord.conf \
     && echo "command=python3  /Docker-GoogleDDNSClient/GoogleDDNSClient.py" >> /etc/supervisord.conf \
-    # && echo "[program:caddy]" >> /etc/supervisord.conf \
-    # && echo "command=caddy run --config /etc/caddy/Caddyfile" >> /etc/supervisord.conf \
-    # && echo "[program:v2ray]" >> /etc/supervisord.conf \
-    # && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf
+    && echo "[program:caddy]" >> /etc/supervisord.conf \
+    && echo "command=caddy run --config /etc/caddy/Caddyfile" >> /etc/supervisord.conf \
+    && echo "[program:v2ray]" >> /etc/supervisord.conf \
+    && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf
 
 #7171 for CN server listenning, 7031 for http, 443 for V2ray
 EXPOSE 7171/udp 7031/tcp 443/tcp
