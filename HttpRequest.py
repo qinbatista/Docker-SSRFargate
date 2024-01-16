@@ -34,18 +34,21 @@ class HttpRequestManager:
                 files_dict[file] = file_path
         return files_dict
 
-    async def _check_query(self, path):
-        if os.path.isfile(path):
-            return self._get_files()
-        else:
-            return {"message": "no such folder"}
+    # async def _check_query(self, path):
+    #     if os.path.isfile(path):
+    #         return self._get_files()
+    #     else:
+    #         return {"message": "no such folder"}
 
     async def _check_file_content(self, path):
-        if os.path.isfile(path) == False:
-            return {path: "no such file"}
-        with open(path, 'r') as f:
-            file_contents = f.read()
-        return {path: file_contents}
+        if os.path.isfile(path):
+            with open(path, 'r') as f:
+                file_contents = f.read()
+            return {path: file_contents}
+        elif os.path.isdir(path):
+            return self._get_files(path)
+        else:
+            return {"message": "no such file or folder"}
 
     def check_ip_or_domain(self, string):
         ip_pattern = r"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
@@ -111,19 +114,18 @@ async def get_log(request: web.Request) -> web.Response:
     return _json_response(result)
 
 
-@ROUTES.get("/{value}")
-async def query_message(request: web.Request) -> web.Response:
-    result = await (request.app["MANAGER"])._check_query(request.rel_url.name)
-    return _json_response(result)
+# @ROUTES.get("/{value}")
+# async def query_message(request: web.Request) -> web.Response:
+#     result = await (request.app["MANAGER"])._check_query(request.rel_url.name)
+#     return _json_response(result)
 
 
 def run():
-    print("HttpRequest:1.0")
+    print("HttpRequest:1.1")
     app = web.Application()
     app.add_routes(ROUTES)
     app["MANAGER"] = HttpRequestManager()
     web.run_app(app, port=7031)
-
 
 if __name__ == "__main__":
     run()
