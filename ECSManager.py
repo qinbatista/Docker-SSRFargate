@@ -6,12 +6,15 @@ import json
 from socket import *
 import platform
 
+
 class ECSManager:
     def __init__(self):
         if platform.system() == "Darwin":
             self.__file_path = "/Users/qin/Desktop/logs.txt"
-            self.__fn_stdout = (f"/Users/qin/Desktop/_get_static_ip_stdout{uuid.uuid4()}.json")
-            self.__fn_tderr = (f"/Users/qin/Desktop/_get_static_ip_stderr{uuid.uuid4()}.json")
+            self.__fn_stdout = (
+                f"/Users/qin/Desktop/_get_static_ip_stdout{uuid.uuid4()}.json")
+            self.__fn_tderr = (
+                f"/Users/qin/Desktop/_get_static_ip_stderr{uuid.uuid4()}.json")
         else:
             self.__file_path = "/root/logs.txt"
             self.__fn_stdout = f"./_get_static_ip_stdout{uuid.uuid4()}.json"
@@ -19,6 +22,7 @@ class ECSManager:
         self.__cluster = "arn:aws:ecs:us-west-2:825807444916:cluster/SSR-Cluster"
         self.__service = "arn:aws:ecs:us-west-2:825807444916:service/SSR-Cluster/SSRService"
         self.__task_definition = "SSRFargate"
+
     def __log(self, result):
         if os.path.isfile(self.__file_path) == False:
             return
@@ -105,6 +109,7 @@ class ECSManager:
                 return result["taskArns"][0]
         except Exception as e:
             self.__log(f"[_stop_task] failed:" + str(e))
+
 
 if __name__ == "__main__":
     ss = ECSManager()
