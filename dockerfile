@@ -104,7 +104,6 @@ RUN aws configure set aws_secret_access_key ${aws_secret}
 RUN aws configure set default.region us-west-2
 RUN aws configure set region us-west-2 --profile testing
 
-
 WORKDIR /
 RUN apk add supervisor
 RUN echo "[supervisord]" > /etc/supervisord.conf \
