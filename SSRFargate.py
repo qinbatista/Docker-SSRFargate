@@ -58,9 +58,6 @@ class SSRFargate:
             while True:
                 data, addr = self.__udpServer.recvfrom(1024)
                 ip, port = addr
-                # print(f"{data.decode(encoding='utf-8')} {ip} {port}")
-                # self.__udpServer.sendto(f"{ip}".encode('utf-8'), addr)
-                # if int(datetime.now(self.__CN_timezone).strftime('%H'))>1 and int(datetime.now(self.__CN_timezone).strftime('%H'))<14:
                 message = data.decode(encoding="utf-8").split(",")
                 if len(message) == 2:
                     self.__current_ip_from_udp = message[0]
