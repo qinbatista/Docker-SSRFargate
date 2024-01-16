@@ -5,7 +5,7 @@ This is a docker source code of SSR based on open encryption connection. More in
 
 
 ```
-docker pull qinbatista/ssrfargateqin &&  docker run -itdv /home/admin/download:/download -p 7031:7031 -p 443:443 -p 7171/udp qinbatista/ssrfargateqin
+docker pull qinbatista/ssrfargateqin &&  docker run -itd -p 7001:7001 -p 443:443 -p 7171/udp qinbatista/ssrfargateqin
 ```
 
 ## How to use it?
