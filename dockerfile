@@ -1,11 +1,7 @@
 FROM python:3.8.13-alpine3.16 as python
 
-
-
-
-
 COPY . /
-
+RUN pip3 install --upgrade pip
 #[Start] V2ray--------------------------------------------------
 WORKDIR /tmp
 
@@ -59,10 +55,12 @@ RUN echo ${DOMAIN_NAME_V6} > /DOMAIN_NAME_V6
 RUN echo ${GOOGLE_USERNAME_V4} > /GOOGLE_USERNAME_V4
 RUN echo ${GOOGLE_PASSWORD_V4} > /GOOGLE_PASSWORD_V4
 RUN echo ${DOMAIN_NAME_V4} > /DOMAIN_NAME_V4
-
+RUN pip3 install -r /Docker-GoogleDDNSClient/requirements.txt
 #[End] GoogleDDNS-----------------------------------------------------
 
-
+#[Start] HTTPHelper--------------------------------------------------
+RUN pip install -r ./Docker-HTTPHelper/requirements.txt
+#[End] HTTPHelper--------------------------------------------------
 
 #add discord setting
 ARG DISCORD_TOKEN
@@ -74,10 +72,6 @@ RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 # RUN apk update && apk add python3.8 py3-pip
 # RUN python3 -m pip install --upgrade pip && python3 -m pip install wheel
 # RUN python3 --version && pip3 --version
-
-#install python3 packages
-RUN pip3 install --upgrade pip
-RUN pip3 install -r /requirement
 
 #install packages
 RUN apk add bash make gcc unzip curl whois ffmpeg rsync sudo git tar build-base openssh aria2 screen vim wget curl proxychains-ng
@@ -124,7 +118,7 @@ RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "[program:v2ray]" >> /etc/supervisord.conf \
     && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf\
     && echo "[program:http]" >> /etc/supervisord.conf \
-    && echo "command=python3 /HttpRequest.py" >> /etc/supervisord.conf
+    && echo "command=python3 /Docker-HTTPHelper/HTTPHelper.py" >> /etc/supervisord.conf
 
 #7171 for CN server listenning, 7031 for http, 443 for V2ray
 EXPOSE 7171/udp 7031/tcp 443/tcp
