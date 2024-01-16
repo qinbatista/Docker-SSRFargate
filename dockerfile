@@ -113,7 +113,7 @@ RUN echo "[supervisord]" > /etc/supervisord.conf \
 
     #v2ray
     && echo "[program:caddy-python]" >> /etc/supervisord.conf \
-    && echo "command=python3 /CaddyLauncher.py" >> /etc/supervisord.conf \
+    && echo "command=python3 /Docker-V2rayServer/CaddyLauncher.py" >> /etc/supervisord.conf \
     && echo "[program:v2ray]" >> /etc/supervisord.conf \
     && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf\
 
