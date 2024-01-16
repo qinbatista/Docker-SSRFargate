@@ -7,24 +7,12 @@ import re
 import requests
 import subprocess
 
+
 class HttpRequestManager:
     def __init__(self, worlds=[]):
-        if platform.system() == "Darwin":
-            self.__log_file_location = "/Users/qin/Desktop/logs.txt"
-            self.__download = "/Users/qin/Downloads"
-        else:
-            self.__log_file_location = "/http_request_logs.txt"
-            self.__download = "/download"
+        self.__file_path = "/http_request_logs.txt"
 
-    async def _get_log(self):
-        if os.path.isfile(self.__log_file_location) == False:
-            return "no file"
-        content = ""
-        with open(self.__log_file_location, "r") as f:
-            content = f.readlines()
-        return content
-
-    def _get_files(self,path):
+    def _get_files(self, path):
         files_dict = {}
         # Walk through all the files and subdirectories in the directory
         for root, dirs, files in os.walk(path):
@@ -67,7 +55,9 @@ class HttpRequestManager:
         try:
             output = subprocess.check_output(["whois", ip])
             output_str = output.decode("utf-8")
-            response = requests.get(f"http://api.ipapi.com/api/{ip}?access_key=762f03e6b5ba38cff2fb5d876eb7860f&hostname=1").json()
+            response = requests.get(
+                f"http://api.ipapi.com/api/{ip}?access_key=762f03e6b5ba38cff2fb5d876eb7860f&hostname=1", timeout=5).json()
+            self.__log(f"response:{response}")
             del response["location"]
             response["whois"] = output_str
             if response.status_code == 200:
@@ -75,7 +65,16 @@ class HttpRequestManager:
             else:
                 return response
         except:
+            self.__log(f"error response:{response}")
             return response
+
+    def __log(self, result):
+        with open(self.__file_path, "a+") as f:
+            f.write(result+"\n")
+        if os.path.getsize(self.__file_path) > 1024*128:
+            with open(self.__file_path, "r") as f:
+                content = f.readlines()
+                os.remove(self.__file_path)
 
     async def _IP_function(self, value, remote_ip):
         if value == "myself":
@@ -126,6 +125,7 @@ def run():
     app.add_routes(ROUTES)
     app["MANAGER"] = HttpRequestManager()
     web.run_app(app, port=7031)
+
 
 if __name__ == "__main__":
     run()
