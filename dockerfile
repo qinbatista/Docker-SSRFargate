@@ -52,6 +52,7 @@ RUN echo ${GOOGLE_USERNAME_V4} > /GOOGLE_USERNAME_V4
 RUN echo ${GOOGLE_PASSWORD_V4} > /GOOGLE_PASSWORD_V4
 RUN echo ${DOMAIN_NAME_V4} > /DOMAIN_NAME_V4
 RUN pip3 install -r /Docker-GoogleDDNSClient/requirements.txt
+RUN apk add --update curl
 #[End] GoogleDDNS-----------------------------------------------------
 
 #[Start] HTTPHelper--------------------------------------------------
