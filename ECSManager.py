@@ -10,12 +10,8 @@ class ECSManager:
     def __init__(self):
         if platform.system() == "Darwin":
             self.__file_path = "/Users/qin/Desktop/logs.txt"
-            self.__fn_stdout = (
-                f"/Users/qin/Desktop/_get_static_ip_stdout{uuid.uuid4()}.json"
-            )
-            self.__fn_tderr = (
-                f"/Users/qin/Desktop/_get_static_ip_stderr{uuid.uuid4()}.json"
-            )
+            self.__fn_stdout = (f"/Users/qin/Desktop/_get_static_ip_stdout{uuid.uuid4()}.json")
+            self.__fn_tderr = (f"/Users/qin/Desktop/_get_static_ip_stderr{uuid.uuid4()}.json")
         else:
             self.__file_path = "/root/logs.txt"
             self.__fn_stdout = f"./_get_static_ip_stdout{uuid.uuid4()}.json"
