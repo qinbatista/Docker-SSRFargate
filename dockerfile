@@ -59,7 +59,7 @@ RUN pip3 install -r /Docker-GoogleDDNSClient/requirements.txt
 #[End] GoogleDDNS-----------------------------------------------------
 
 #[Start] HTTPHelper--------------------------------------------------
-RUN pip install -r ./Docker-HTTPHelper/requirements.txt
+RUN pip install -r /Docker-HTTPHelper/requirements.txt
 #[End] HTTPHelper--------------------------------------------------
 
 #add discord setting
