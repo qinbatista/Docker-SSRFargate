@@ -90,7 +90,6 @@ class SSRFargate:
                     self.__inaccessible_count = 0
                 time.sleep(60)
             except Exception as e:
-                # pass
                 self.__log(f"{str(e)}")\
 
     def __shutdown_current_ip(self):
