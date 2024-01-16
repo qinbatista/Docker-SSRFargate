@@ -13,9 +13,9 @@ class S3Manager:
             self.__fn_stdout = (f"/Users/{getpass.getuser()}/Desktop/_get_static_ip_stdout{uuid.uuid4()}.json")
             self.__fn_tderr = (f"/Users/{getpass.getuser()}/Desktop/_get_static_ip_stderr{uuid.uuid4()}.json")
         else:
-            self.__file_path = "/download/s3logs.txt"
-            self.__fn_stdout = f"/download/_get_static_ip_stdout{uuid.uuid4()}.json"
-            self.__fn_tderr = f"/download/_get_static_ip_stderr{uuid.uuid4()}.json"
+            self.__file_path = "/s3logs"
+            self.__fn_stdout = f"/_get_static_ip_stdout{uuid.uuid4()}.json"
+            self.__fn_tderr = f"/_get_static_ip_stderr{uuid.uuid4()}.json"
         self.__s3_bucket = "s3://qinyupeng.com"
 
     def __log(self, result):

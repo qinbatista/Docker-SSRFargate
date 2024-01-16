@@ -16,7 +16,7 @@ class ECSManager:
             self.__fn_tderr = (
                 f"/Users/qin/Desktop/_get_static_ip_stderr{uuid.uuid4()}.json")
         else:
-            self.__file_path = "/root/logs.txt"
+            self.__file_path = "/ecs_manager_logs"
             self.__fn_stdout = f"./_get_static_ip_stdout{uuid.uuid4()}.json"
             self.__fn_tderr = f"./_get_static_ip_stderr{uuid.uuid4()}.json"
         self.__cluster = "arn:aws:ecs:us-west-2:825807444916:cluster/SSR-Cluster"
