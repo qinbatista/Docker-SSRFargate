@@ -81,4 +81,4 @@ class S3Manager:
 if __name__ == "__main__":
     ss = S3Manager()
     # ss._sync_folder("/Users/batista/Desktop/文昭思绪飞扬", "/Videos/文昭思绪飞扬")
-    ss._list_folder("/Videos/文昭思绪飞扬/")
+    # ss._list_folder("/Videos/文昭思绪飞扬/")
