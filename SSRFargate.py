@@ -31,14 +31,6 @@ class SSRFargate:
         self.__is_connect = ""
         self.__the_ip = ""
         self.__inaccessible_count = 0
-        self.__record_time = datetime.now(self.__CN_timezone)
-        self.__ave_time = 0
-        with open("/google_key.txt", "r") as f:
-            self.__google_key = f.readline()
-        with open("/google_secret.txt", "r") as f:
-            self.__google_secret = f.readline()
-        self.__google_key = self.__google_key.strip()
-        self.__google_secret = self.__google_secret.strip()
 
     def __log(self, result):
         # if os.path.isfile(self.__file_path)==False:
