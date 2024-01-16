@@ -16,14 +16,10 @@ from ECSManager import ECSManager
 
 class SSRFargate:
     def __init__(self):
-        # self.__region = _region
-        # self.__server_name = _server_name
         self.__received_count = 0
         self.__CN_timezone = pytz.timezone("Asia/Shanghai")
         self.__current_ip_from_udp = ""
-        # self.__close_port = False
         self.__udpServer = socket(AF_INET, SOCK_DGRAM)
-        self.__current_ip = ""
         if platform.system() == "Darwin":
             self.__file_path = "/Users/qin/Desktop/logs.txt"
         else:
@@ -102,21 +98,13 @@ class SSRFargate:
         em = ECSManager()
         em._replace_fargate()
 
-    def _thread_display_log(self):
-        thread_refresh = threading.Thread(target=self.__display_log, name="t1", args=())
-        thread_refresh.start()
-
-    def __display_log(self):
-        p = subprocess.Popen("python3 /HttpRequest.py",universal_newlines=True,shell=True,)
-        p.wait()
-
     def _running(self):
         while True:
             time.sleep(10)
 
 if __name__ == "__main__":
     sf = SSRFargate()
-    sf._thread_display_log()
+    # sf._thread_display_log()
     # sf._thread_listening_CN()
     # sf._thread_ip_holding()
     # sf._thread_Discord()
