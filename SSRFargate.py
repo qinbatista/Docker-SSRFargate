@@ -93,7 +93,6 @@ class SSRFargate:
                 # pass
                 self.__log(f"{str(e)}")\
 
-
     def __shutdown_current_ip(self):
         em = ECSManager()
         em._replace_fargate()
