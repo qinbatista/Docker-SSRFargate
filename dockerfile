@@ -4,7 +4,6 @@ COPY . /
 RUN pip3 install --upgrade pip
 
 #[Start] V2ray--------------------------------------------------
-RUN pip install -r /Docker-V2rayServer/requirements.txt
 WORKDIR /tmp
 #all variables are on github action
 ARG V2RAY_ADDRESS
@@ -14,7 +13,9 @@ ARG V2RAY_TAG
 ENV V2RAY_ADDRESS=${V2RAY_ADDRESS}
 #install v2ray config
 RUN apk add wget
+RUN wget ${V2RAY_DOWNLOADURL}/${V2RAY_ADDRESS}/Caddyfile
 RUN wget ${V2RAY_DOWNLOADURL}/${V2RAY_ADDRESS}/v2rayconfig.json
+
 RUN cat /tmp/v2rayconfig.json
 #install v2ray
 COPY /Docker-V2rayServer/v2ray.sh "${WORKDIR}"/v2ray.sh
@@ -30,6 +31,7 @@ RUN apk add caddy
 RUN wget ${V2RAY_DOWNLOADURL}/${V2RAY_ADDRESS}/Caddyfile
 RUN cat /tmp/Caddyfile
 RUN mv -f /tmp/Caddyfile /etc/caddy/Caddyfile
+RUN pip install -r /Docker-V2rayServer/requirements.txt
 #remove all folder
 RUN rm -rf /tmp
 #[End] V2ray-----------------------------------------------------
