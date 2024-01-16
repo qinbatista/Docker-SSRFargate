@@ -2,10 +2,8 @@
 import subprocess
 import uuid
 import os
-import json
 import platform
 import getpass
-
 class S3Manager:
     def __init__(self):
         if platform.system() == "Darwin":
