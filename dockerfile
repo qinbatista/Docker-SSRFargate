@@ -74,7 +74,7 @@ RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 # RUN python3 --version && pip3 --version
 
 #install packages
-RUN apk add bash make gcc unzip curl whois ffmpeg rsync sudo git tar build-base openssh aria2 screen vim wget curl proxychains-ng
+RUN apk add openssh vim wget
 
 #write RSA key
 ARG rsa
