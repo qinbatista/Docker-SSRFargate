@@ -51,6 +51,28 @@ RUN rm -rf /tmp
 #[End] V2ray-----------------------------------------------------
 
 
+#[Start] GoogleDDNS--------------------------------------------------
+
+WORKDIR /tmp
+ARG GOOGLE_USERNAME_V6
+ARG GOOGLE_PASSWORD_V6
+ARG DOMAIN_NAME_V6
+ARG GOOGLE_USERNAME_V4
+ARG GOOGLE_PASSWORD_V4
+ARG DOMAIN_NAME_V4
+
+RUN echo ${GOOGLE_USERNAME_V6} > GOOGLE_USERNAME_V6
+RUN echo ${GOOGLE_PASSWORD_V6} > GOOGLE_PASSWORD_V6
+RUN echo ${DOMAIN_NAME_V6} > DOMAIN_NAME_V6
+RUN echo ${GOOGLE_USERNAME_V4} > GOOGLE_USERNAME_V4
+RUN echo ${GOOGLE_PASSWORD_V4} > GOOGLE_PASSWORD_V4
+RUN echo ${DOMAIN_NAME_V4} > DOMAIN_NAME_V4
+
+COPY /Docker-GoogleDDNSClient/GoogleDDNSClient.py /GoogleDDNSClient.py
+RUN rm -rf /tmp
+#[End] GoogleDDNS-----------------------------------------------------
+
+
 
 #add discord setting
 RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env

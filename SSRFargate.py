@@ -63,17 +63,6 @@ class SSRFargate:
             )
             return self.__current_ip_from_udp
 
-    def _post_ip_to_google_DNS(self):
-        try:
-            self.__the_ip = self.__get_host_ip()
-            if self.__the_ip == self.__current_ip:
-                return
-            else:
-                result = requests.post(f"https://{self.__google_key}:{self.__google_secret}@domains.google.com/nic/update?hostname=us.qinyupeng.com&myip={self.__the_ip}")
-                self.__current_ip = self.__the_ip
-        except Exception as e:
-            self.__log(f"_post_ip_address:{str(e)} self.__current_ip_from_udp={str(self.__current_ip_from_udp)}")
-
     def __post_client_to_google_DNS(self, client_ip, client_verify_key, client_domain_name):
         try:
             requests.post(f"https://{client_verify_key}@domains.google.com/nic/update?hostname={client_domain_name}&myip={client_ip}")
@@ -86,25 +75,28 @@ class SSRFargate:
         thread_refresh.start()
 
     def __IP_poster(self):
-        while True:
-            self._post_ip_to_google_DNS()
-            time.sleep(10)
+        p = subprocess.Popen("python3 /GoogleDDNSClient.py", universal_newlines=True, shell=True,)
+        p.wait()
 
     def _thread_VPN(self):
-        # thread_refresh = threading.Thread(target=self.__SSR, name="t1", args=())
-        # thread_refresh.start()
+        thread_Caddy = threading.Thread(target=self.__Caddy, name="t1", args=())
+        thread_Caddy.start()
 
-        thread_refresh = threading.Thread(target=self.__V2ray, name="t1", args=())
-        thread_refresh.start()
-
-    def __SSR(self):
-        print("SSR start")
-        p = subprocess.Popen("python /usr/local/ssr/shadowsocks/server.py -c /etc/ssr.json",universal_newlines=True,shell=True,)
-        p.wait()
+        thread_V2ray = threading.Thread(target=self.__V2ray, name="t1", args=())
+        thread_V2ray.start()
 
     def __V2ray(self):
         print("V2ray start")
         p = subprocess.Popen("v2ray run -c /etc/v2ray/config.json",universal_newlines=True,shell=True,)
+        p.wait()
+
+    def __Caddy(self):
+        while True:
+            time.sleep(10)
+            print(requests.get("https://checkip.amazonaws.com").text.strip()+" " + gethostbyname("us.qinyupeng.com"))
+            if requests.get("https://checkip.amazonaws.com").text.strip() == gethostbyname("us.qinyupeng.com"):
+                break
+        p = subprocess.Popen("caddy run --config /etc/caddy/Caddyfile", universal_newlines=True, shell=True,)
         p.wait()
 
     def _thread_listening_CN(self):
@@ -186,28 +178,15 @@ class SSRFargate:
         p = subprocess.Popen("python3 /DiscordChatGPT/run.py", universal_newlines=True, shell=True,)
         p.wait()
 
-    def _thread_Caddy(self):
-        thread_refresh = threading.Thread(target=self.__Caddy, name="t1", args=())
-        thread_refresh.start()
-
-    def __Caddy(self):
-        while True:
-            time.sleep(10)
-            print(requests.get("https://checkip.amazonaws.com").text.strip()+" " + gethostbyname("us.qinyupeng.com"))
-            if requests.get("https://checkip.amazonaws.com").text.strip() == gethostbyname("us.qinyupeng.com"):
-                break
-        p = subprocess.Popen("caddy run --config /etc/caddy/Caddyfile", universal_newlines=True, shell=True,)
-        p.wait()
 
 
 if __name__ == "__main__":
     sf = SSRFargate()
     sf._thread_IP_poster()
-    sf._thread_Discord()
-    sf._thread_display_log()
     sf._thread_VPN()
-    sf._thread_listening_CN()
-    sf._thread_ip_holding()
-    sf._thread_youtubeSync()
-    sf._thread_Caddy()
+    # sf._thread_display_log()
+    # sf._thread_listening_CN()
+    # sf._thread_ip_holding()
+    # sf._thread_Discord()
+    # sf._thread_youtubeSync()
     sf._running()
