@@ -20,7 +20,7 @@ class ECSManager:
             self.__fn_stdout = f"./_get_static_ip_stdout{uuid.uuid4()}.json"
             self.__fn_tderr = f"./_get_static_ip_stderr{uuid.uuid4()}.json"
         self.__cluster = "arn:aws:ecs:us-west-2:825807444916:cluster/SSR-Cluster"
-        self.__service = "arn:aws:ecs:us-west-2:825807444916:service/SSR-Cluster/SSRService"
+        self.__service = "arn:aws:ecs:us-west-2:825807444916:service/SSR-Cluster/FargetServer"
         self.__task_definition = "SSRFargate"
 
     def __log(self, result):
