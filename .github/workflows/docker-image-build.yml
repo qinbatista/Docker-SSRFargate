@@ -42,7 +42,6 @@ jobs:
             --build-arg V2RAY_DOWNLOADURL="${{ vars.V2RAY_DOWNLOADURL }}"
             --build-arg V2RAY_TARGETPLATFORM="${{ vars.V2RAY_TARGETPLATFORM }}"
             --build-arg V2RAY_TAG="${{ vars.V2RAY_TAG }}"
-
             --build-arg DOMAIN_NAME_V4="${{ secrets.DOMAIN_NAME_V4 }}"
             --build-arg GOOGLE_USERNAME_V4="${{ secrets.GOOGLE_USERNAME_V4 }}"
             --build-arg GOOGLE_PASSWORD_V4="${{ secrets.GOOGLE_PASSWORD_V4 }}"
