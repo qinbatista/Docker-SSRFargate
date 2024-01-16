@@ -96,12 +96,12 @@ def _json_response(body: dict = "", **kwargs) -> web.Response:
 
 @ROUTES.get("/lookup")
 async def query_message(request: web.Request) -> web.Response:
-    result = (request.app["MANAGER"])._check_file_content(request.query["path"])
+    result = await (request.app["MANAGER"])._check_file_content(request.query["path"])
     return _json_response(result)
 
 @ROUTES.get("/ip/{value}")
 async def get_log(request: web.Request) -> web.Response:
-    result = (request.app["MANAGER"])._IP_function(request.rel_url.name, request.remote)
+    result = await (request.app["MANAGER"])._IP_function(request.rel_url.name, request.remote)
     return _json_response(result)
 
 
