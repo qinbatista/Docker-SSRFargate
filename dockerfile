@@ -34,7 +34,7 @@ RUN mv -f ./v2rayconfig.json /etc/v2ray/config.json
 #install caddy
 RUN apk add caddy
 RUN mv -f ./Caddyfile /etc/caddy/Caddyfile
-
+RUN pip install -r /Docker-V2rayServer/requirements.txt
 #remove all folder
 RUN rm -rf /tmp
 #[End] V2ray-----------------------------------------------------
