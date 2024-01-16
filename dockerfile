@@ -17,7 +17,7 @@ RUN apk add wget
 RUN wget ${V2RAY_DOWNLOADURL}/${V2RAY_ADDRESS}/v2rayconfig.json
 RUN cat /tmp/v2rayconfig.json
 #install v2ray
-COPY v2ray.sh "${WORKDIR}"/v2ray.sh
+COPY /Docker-V2rayServer/v2ray.sh "${WORKDIR}"/v2ray.sh
 RUN set -ex \
     && apk add --no-cache ca-certificates \
     && mkdir -p /etc/v2ray /usr/local/share/v2ray /var/log/v2ray \
