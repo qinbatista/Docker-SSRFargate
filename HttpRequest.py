@@ -94,22 +94,14 @@ def _json_response(body: dict = "", **kwargs) -> web.Response:
     kwargs["content_type"] = "text/json"
     return web.Response(**kwargs)
 
-
 @ROUTES.get("/lookup")
 async def query_message(request: web.Request) -> web.Response:
-    result = await (request.app["MANAGER"])._check_file_content(request.query["path"])
+    result = (request.app["MANAGER"])._check_file_content(request.query["path"])
     return _json_response(result)
-
-
-@ROUTES.get("/log")
-async def get_log(request: web.Request) -> web.Response:
-    result = await (request.app["MANAGER"])._get_log()
-    return _json_response({"status": 200, "message": "health", "data": result})
-
 
 @ROUTES.get("/ip/{value}")
 async def get_log(request: web.Request) -> web.Response:
-    result = await (request.app["MANAGER"])._IP_function(request.rel_url.name, request.remote)
+    result = (request.app["MANAGER"])._IP_function(request.rel_url.name, request.remote)
     return _json_response(result)
 
 
@@ -117,7 +109,6 @@ async def get_log(request: web.Request) -> web.Response:
 # async def query_message(request: web.Request) -> web.Response:
 #     result = await (request.app["MANAGER"])._check_query(request.rel_url.name)
 #     return _json_response(result)
-
 
 def run():
     print("HttpRequest:1.1")
