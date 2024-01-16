@@ -107,18 +107,13 @@ RUN aws configure set aws_access_key_id ${aws_key}
 RUN aws configure set aws_secret_access_key ${aws_secret}
 RUN aws configure set default.region us-west-2
 RUN aws configure set region us-west-2 --profile testing
-RUN echo ${google_key} > google_key.txt
-RUN echo ${google_secret} > google_secret.txt
-RUN echo ${aws_key} > aws_key.txt
-RUN echo ${aws_secret} > aws_secret.txt
 
-#7171 for CN server listenning, 7031 for http, 443 for V2ray
 
 
 #folder for download
 VOLUME [ "/download"]
 
-WORKDIR /root
+WORKDIR /
 RUN apk add supervisor
 RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "nodaemon=true" >> /etc/supervisord.conf \
@@ -131,5 +126,6 @@ RUN echo "[supervisord]" > /etc/supervisord.conf \
     # && echo "[program:v2ray]" >> /etc/supervisord.conf \
     # && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf
 
+#7171 for CN server listenning, 7031 for http, 443 for V2ray
 EXPOSE 7171/udp 7031/tcp 443/tcp
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
