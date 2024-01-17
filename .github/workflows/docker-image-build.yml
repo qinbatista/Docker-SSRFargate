@@ -63,4 +63,4 @@ jobs:
         with:
             submodules: recursive
       - name: Refresh Server
-        run: python3 /Docker-CNListener/ECSManager.py
+        run: python3 ./Docker-CNListener/ECSManager.py
