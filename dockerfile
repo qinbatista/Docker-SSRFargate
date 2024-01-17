@@ -87,21 +87,17 @@ WORKDIR /
 RUN apk add supervisor
 RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "nodaemon=true" >> /etc/supervisord.conf \
-
     #CN listener
     && echo "[program:cn_listener]" >> /etc/supervisord.conf \
     && echo "command=python3 /Docker-CNListener/CNListener.py" >> /etc/supervisord.conf \
-
     #google ddns
     && echo "[program:googleddns]" >> /etc/supervisord.conf \
     && echo "command=python3  /Docker-GoogleDDNSClient/GoogleDDNSClient.py" >> /etc/supervisord.conf \
-
     #v2ray
     && echo "[program:caddy-python]" >> /etc/supervisord.conf \
     && echo "command=python3 /Docker-V2rayServer/CaddyLauncher.py" >> /etc/supervisord.conf \
     && echo "[program:v2ray]" >> /etc/supervisord.conf \
     && echo "command=v2ray run -c /etc/v2ray/config.json" >> /etc/supervisord.conf\
-
     #http helper
     && echo "[program:httphelper]" >> /etc/supervisord.conf \
     && echo "command=python3 /Docker-HTTPHelper/HTTPHelper.py" >> /etc/supervisord.conf
