@@ -71,8 +71,6 @@ RUN pip3 install --upgrade pip
 RUN pip3 install -r /Docker-CNListener/requirements.txt
 ARG aws_key
 ARG aws_secret
-ARG CLUSTER_NAME
-ENV CLUSTER_NAME=${CLUSTER_NAME}
 
 RUN apk add aws-cli
 RUN aws configure set aws_access_key_id ${aws_key}
