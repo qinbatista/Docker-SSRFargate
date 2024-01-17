@@ -37,7 +37,6 @@ RUN rm -rf /tmp
 
 
 #[Start] GoogleDDNS--------------------------------------------------
-
 ARG GOOGLE_USERNAME_V6
 ARG GOOGLE_PASSWORD_V6
 ARG DOMAIN_NAME_V6
@@ -60,54 +59,38 @@ RUN apk add --update curl
 RUN pip install -r /Docker-HTTPHelper/requirements.txt
 #[End] HTTPHelper--------------------------------------------------
 
-#add discord setting
-ARG DISCORD_TOKEN
-ARG CHATGPT_API_KEY
-RUN echo "DISCORD_TOKEN = ${DISCORD_TOKEN}" >> /DiscordChatGPT/.env
-RUN echo "CHATGPT_API_KEY = ${CHATGPT_API_KEY}" >> /DiscordChatGPT/.env
 
-#install python3 packages
-# RUN apk update && apk add python3.8 py3-pip
-# RUN python3 -m pip install --upgrade pip && python3 -m pip install wheel
-# RUN python3 --version && pip3 --version
+#[Start] Docker-CNListener--------------------------------------------------
+RUN apk add --update curl
+RUN pip install -r /Docker-HTTPHelper/requirements.txt
+#[End] Docker-CNListener--------------------------------------------------
 
-#install packages
-RUN apk add openssh vim wget
 
-#write RSA key
-ARG rsa
-ARG rsa_public
-RUN echo -----BEGIN OPENSSH PRIVATE KEY----- >> id_rsa
-RUN echo ${rsa} >> id_rsa
-RUN echo -----END OPENSSH PRIVATE KEY----- >> id_rsa
-RUN echo ${rsa_public} > id_rsa.pub
-
-#for config NAS
-RUN mkdir ~/.ssh/
-RUN touch ~/.ssh/authorized_keys
-RUN touch ~/.ssh/known_hosts
-RUN mv ./id_rsa ~/.ssh/
-RUN mv ./id_rsa.pub ~/.ssh/
-RUN chmod 600 ~/.ssh/id_rsa
-
-# config github download
-RUN ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts
-
-#install AWS CLI
+#[Start] CNListener--------------------------------------------------
+RUN pip3 install --upgrade pip
+RUN pip3 install -r /Docker-CNListener/requirements.txt
 ARG aws_key
 ARG aws_secret
+ARG CLUSTER_NAME
+ENV CLUSTER_NAME=${CLUSTER_NAME}
+
 RUN apk add aws-cli
 RUN aws configure set aws_access_key_id ${aws_key}
 RUN aws configure set aws_secret_access_key ${aws_secret}
 RUN aws configure set default.region us-west-2
 RUN aws configure set region us-west-2 --profile testing
 
+RUN apk add curl
+#[End] CNListener--------------------------------------------------
+
 WORKDIR /
 RUN apk add supervisor
 RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "nodaemon=true" >> /etc/supervisord.conf \
-    # && echo "[program:ssrf]" >> /etc/supervisord.conf \
-    # && echo "command=python3 /SSRFargate.py" >> /etc/supervisord.conf \
+
+    #CN listener
+    && echo "[program:cn_listener]" >> /etc/supervisord.conf \
+    && echo "command=python3 /Docker-CNListener/CNListener.py" >> /etc/supervisord.conf \
 
     #google ddns
     && echo "[program:googleddns]" >> /etc/supervisord.conf \

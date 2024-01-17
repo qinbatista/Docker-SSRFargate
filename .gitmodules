@@ -7,3 +7,6 @@
 [submodule "Docker-HTTPHelper"]
 	path = Docker-HTTPHelper
 	url = https://github.com/qinbatista/Docker-HTTPHelper.git
+[submodule "Docker-CNListener"]
+	path = Docker-CNListener
+	url = https://github.com/qinbatista/Docker-CNListener.git
