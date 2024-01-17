@@ -58,6 +58,9 @@ jobs:
       - name: Push docker
         run: docker push qinbatista/ssrfargateqin
 
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+            submodules: 'true'
       - name: Refresh Server
         run: python3 /Docker-CNListener/ECSManager.py
