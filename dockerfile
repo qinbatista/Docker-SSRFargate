@@ -56,6 +56,7 @@ RUN apk add --update curl
 #[End] GoogleDDNS-----------------------------------------------------
 
 #[Start] HTTPHelper--------------------------------------------------
+RUN apk add --update curl whois
 RUN pip install -r /Docker-HTTPHelper/requirements.txt
 #[End] HTTPHelper--------------------------------------------------
 
