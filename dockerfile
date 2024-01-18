@@ -100,6 +100,6 @@ RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "[program:httphelper]" >> /etc/supervisord.conf \
     && echo "command=python3 /Docker-HTTPHelper/HTTPHelper.py" >> /etc/supervisord.conf
 
-#7171 for CN server listenning, 7031 for http, 443 for V2ray
-EXPOSE 7171/udp 7001/tcp 443/tcp
+#443 V2ray secure, 7000 v2ray fast connection, 7001 http, 7171 listen CN , 7031 http,
+EXPOSE 443/tcp  7000/udp 7001/tcp 7171/udp
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
