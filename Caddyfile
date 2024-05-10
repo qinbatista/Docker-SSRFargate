@@ -1,0 +1,11 @@
+us.qinyupeng.com {
+  log {
+    output file /caddy.log
+  }
+  reverse_proxy /a9e25d7a localhost:10000 {
+    header_up -Origin
+  }
+   tls {
+        // No need to add anything here; Caddy handles it automatically
+    }
+}
