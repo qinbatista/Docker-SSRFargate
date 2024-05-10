@@ -36,23 +36,14 @@ RUN rm -rf /tmp
 #[End] V2ray-----------------------------------------------------
 
 
-#[Start] GoogleDDNS--------------------------------------------------
-ARG GOOGLE_USERNAME_V6
-ARG GOOGLE_PASSWORD_V6
-ARG DOMAIN_NAME_V6
-ARG GOOGLE_USERNAME_V4
-ARG GOOGLE_PASSWORD_V4
-ARG DOMAIN_NAME_V4
-
-RUN echo ${GOOGLE_USERNAME_V6} > /GOOGLE_USERNAME_V6
-RUN echo ${GOOGLE_PASSWORD_V6} > /GOOGLE_PASSWORD_V6
-RUN echo ${DOMAIN_NAME_V6} > /DOMAIN_NAME_V6
-RUN echo ${GOOGLE_USERNAME_V4} > /GOOGLE_USERNAME_V4
-RUN echo ${GOOGLE_PASSWORD_V4} > /GOOGLE_PASSWORD_V4
-RUN echo ${DOMAIN_NAME_V4} > /DOMAIN_NAME_V4
-RUN pip3 install -r /Docker-GoogleDDNSClient/requirements.txt
+#[Start] aws DDNS --------------------------------------------------
+ARG AWS_LAMBDA
+ENV AWS_LAMBDA=${AWS_LAMBDA}
 RUN apk add --update curl
-#[End] GoogleDDNS-----------------------------------------------------
+RUN pip3 install -r /Docker-AWS-DDNS/requirements.txt
+RUN apk add --update curl
+#[End] aws DDNS -----------------------------------------------------
+
 
 #[Start] HTTPHelper--------------------------------------------------
 RUN apk add --update curl
@@ -89,8 +80,8 @@ RUN echo "[supervisord]" > /etc/supervisord.conf \
     && echo "[program:cn_listener]" >> /etc/supervisord.conf \
     && echo "command=python3 /Docker-CNListener/CNListener.py" >> /etc/supervisord.conf \
     #google ddns
-    && echo "[program:googleddns]" >> /etc/supervisord.conf \
-    && echo "command=python3  /Docker-GoogleDDNSClient/GoogleDDNSClient.py" >> /etc/supervisord.conf \
+    && echo "[program:aws-ddns]" >> /etc/supervisord.conf \
+    && echo "command=python3  /Docker-AWS-DDNS/AWSDDNSUS.py" >> /etc/supervisord.conf \
     #v2ray
     && echo "[program:caddy-python]" >> /etc/supervisord.conf \
     && echo "command=python3 /Docker-V2rayServer/CaddyLauncher.py" >> /etc/supervisord.conf \

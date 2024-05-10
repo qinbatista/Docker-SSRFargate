@@ -1,12 +1,12 @@
 [submodule "Docker-V2rayServer"]
 	path = Docker-V2rayServer
 	url = https://github.com/qinbatista/Docker-V2rayServer.git
-[submodule "Docker-GoogleDDNSClient"]
-	path = Docker-GoogleDDNSClient
-	url = https://github.com/qinbatista/Docker-GoogleDDNSClient.git
 [submodule "Docker-HTTPHelper"]
 	path = Docker-HTTPHelper
 	url = https://github.com/qinbatista/Docker-HTTPHelper.git
 [submodule "Docker-CNListener"]
 	path = Docker-CNListener
 	url = https://github.com/qinbatista/Docker-CNListener.git
+[submodule "Docker-AWS-DDNS"]
+	path = Docker-AWS-DDNS
+	url = https://github.com/qinbatista/Docker-AWS-DDNS.git
