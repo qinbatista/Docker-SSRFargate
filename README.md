@@ -4,7 +4,6 @@
 This is a docker source code of SSR based on open encryption connection. More info about [SSR](https://github.com/shadowsocksrr/shadowsocksr). The docker can be deployed on AWS->ECS->Fargata container which is the cheapest docker container right now, around $2/month.\
 
 
-
 ```
 docker pull qinbatista/ssrfargateqin &&  docker run -itd -p 443:443 -p 7000:7000/udp -p 7001:7001 -p 7171:7171/udp qinbatista/ssrfargateqin
 ```
