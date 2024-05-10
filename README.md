@@ -1,6 +1,6 @@
 
 # SSRFargate 
-## What it is?
+## What it is? 
 This is a docker source code of SSR based on open encryption connection. More info about [SSR](https://github.com/shadowsocksrr/shadowsocksr). The docker can be deployed on AWS->ECS->Fargata container which is the cheapest docker container right now, around $2/month.\
 
 
