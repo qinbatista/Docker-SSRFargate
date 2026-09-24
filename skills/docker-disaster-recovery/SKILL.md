@@ -5,7 +5,7 @@ description: Restore Docker-SSRFargate from GitHub and verified private Google D
 
 # Docker-SSRFargate recovery
 
-Discover the current container/image mapping from Docker inspection and this repository’s deployment files. Do not assume that this source repository is active on the target host.
+Discover the current container/image mapping from Docker inspection and this repository’s deployment files. Do not assume that this source repository is active on the target host. This repository pins an old `Docker-CNListener` submodule commit; its GitHub URL now redirects to `Docker-UDPIPUpdate`. Clone that current repository directly for its recovery skill, and review compatibility before changing this parent's submodule pin.
 
 1. Clone this repository from its configured GitHub remote and read the current Dockerfile, Compose files, and runtime instructions. Compare the selected source commit with the image or build recorded in the recovery inventory; report any mismatch.
 2. Clone the private `qinbatista/google-drive-helper` repository and follow its `skills/docker-disaster-recovery/SKILL.md`. Authenticate Google Drive on the replacement host, download the exact immutable Docker recovery bundle, and run `recovery_bundle.py stage` in an empty private directory. Require a SHA-256 pass for every included regular file. The bundle and staged files may contain credentials; keep them outside Git.
